@@ -1,5 +1,5 @@
-# RECUPERA.AI — painel + voz ao vivo (Node 24 tem node:sqlite estavel; Python p/ edge-tts)
-FROM node:24-slim
+# RECUPERA.AI — painel + voz ao vivo (Node current: node:sqlite sem flag; Python p/ edge-tts)
+FROM node:current-slim
 
 RUN apt-get update && apt-get install -y --no-install-recommends python3 python3-pip \
     && pip3 install --break-system-packages --no-cache-dir edge-tts \
