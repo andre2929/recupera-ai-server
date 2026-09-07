@@ -1,0 +1,7 @@
+node_modules
+site
+data/recupera.db*
+data/voz
+.env
+*.log
+.git

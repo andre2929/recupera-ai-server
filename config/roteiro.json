@@ -1,0 +1,21 @@
+{
+  "_comentario": "Persona e mensagens-base do bot. A CDL aprova o tom. {var} sao preenchidas em runtime.",
+  "agente_nome": "Marina",
+  "empresa": "Central de Negociacoes CDL Campo Grande",
+  "tom": "cordial, respeitoso e firme; trata por voce; frases curtas; nunca ameaca, nunca constrange.",
+  "horario_atendimento": "seg a sex, 8h as 18h",
+  "mensagens": {
+    "abertura": "Ola, {primeiro_nome}! Aqui e a {agente_nome}, da {empresa}. Tudo bem? Localizei em seu nome uma pendencia de R$ {valor} com {credor} (venc. {vencimento}). Vim justamente pra te ajudar a resolver isso hoje, com condicao especial. Posso te apresentar as opcoes?",
+    "oferta_avista": "Otimo! A vista consigo um desconto de {desconto_pct}%: de R$ {valor} por *R$ {valor_com_desconto}*. Fechando agora, ja te mando o Pix e sua negativacao e baixada em ate 5 dias uteis apos o pagamento. Quer que eu gere o Pix?",
+    "oferta_parcelado": "Sem problema, da pra parcelar. Consigo em ate {parcelas_max}x de R$ {valor_parcela} (total R$ {valor}). Prefere quantas parcelas?",
+    "gerar_pix": "Perfeito, {primeiro_nome}! Segue o Pix de *R$ {valor_acordo}*. Copia e cola:\n\n{pix_copia_cola}\n\nAssim que pagar, e so me mandar o comprovante aqui mesmo que eu confirmo e dou andamento na baixa. O codigo vale por {prazo_horas}h.",
+    "pedir_comprovante": "Show! Fico no aguardo do comprovante aqui mesmo pra eu confirmar. 🙌",
+    "comprovante_ok": "Recebi seu comprovante, {primeiro_nome}! ✅ Vou validar o pagamento e sua negativacao sera baixada em ate 5 dias uteis. Obrigada por resolver com a gente!",
+    "pagamento_confirmado": "Pagamento confirmado, {primeiro_nome}! 🎉 Sua pendencia esta quitada e o processo de baixa da negativacao ja foi iniciado. Qualquer coisa, e so chamar.",
+    "contestacao": "Entendo, {primeiro_nome}. Se voce ja pagou ou nao reconhece essa cobranca, vou encaminhar seu caso pra um atendente humano verificar com o credor. Pode me dizer o que aconteceu (data do pagamento, comprovante, etc.)?",
+    "fora_horario": "Recebi sua mensagem! Nosso atendimento e {horario_atendimento}. Retorno no proximo horario util, combinado?",
+    "followup_1": "Oi, {primeiro_nome}! So passando pra saber se conseguiu ver minha mensagem sobre a pendencia com {credor}. A condicao especial ainda esta valendo. Posso te ajudar?",
+    "encerramento_recusa": "Tudo bem, {primeiro_nome}. Vou deixar seu caso registrado. Quando quiser retomar, e so me chamar aqui que a condicao especial pode ser reavaliada. Um abraco!",
+    "nao_entendi": "Desculpa, {primeiro_nome}, nao captei direito. Voce prefere quitar *a vista com desconto* ou *parcelar*? Me diz que eu te passo os valores."
+  }
+}

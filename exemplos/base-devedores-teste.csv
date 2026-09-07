@@ -1,0 +1,31 @@
+nome,cpf,telefone,valor,vencimento,credor,situacao_spc,perfil_teste
+Ana Paula Ribeiro,047.812.339-05,5567991000101,347.90,2026-06-12,Óticas Visão Clara,negativado,quer_pagar_avista
+Carlos Eduardo Mendes,128.455.780-22,5567991000102,1289.50,2026-04-03,Móveis Bom Lar,negativado,quer_parcelar
+Juliana Fernandes Souza,309.744.120-88,5567991000103,89.90,2026-07-28,Farmácia Popular MS,negativado,valor_baixo_paga_rapido
+Rafael Augusto Lima,556.201.933-14,5567991000104,4720.00,2025-11-15,Loja do Construtor,negativado,divida_alta_negocia_desconto
+Mariana Costa Alves,712.098.554-60,5567991000105,612.30,2026-05-20,Magazine Central,negativado,pede_desconto
+Bruno Henrique Teixeira,214.667.802-31,5567991000106,158.00,2026-08-01,Pet Shop Amigo Fiel,negativado,quer_pagar_avista
+Patrícia Gomes de Oliveira,489.330.176-07,5567991000107,2340.75,2026-02-10,Concessionária AutoSul,negativado,divida_alta_parcela_longo
+Fernando Nogueira Pires,663.812.045-99,5567991000108,975.00,2026-06-30,Escola Saber Mais,negativado,ja_pagou_contesta
+Camila Barbosa Rocha,131.559.870-42,5567991000109,430.20,2026-07-05,Boutique Elegance,negativado,quer_parcelar
+Diego Martins Cardoso,298.104.663-58,5567991000110,6980.00,2025-09-22,Financeira CredFácil,negativado,divida_muito_alta
+Larissa Vieira Santos,540.876.201-13,5567991000111,205.50,2026-08-14,Livraria do Saber,negativado,valor_baixo_paga_rapido
+Gustavo Almeida Freitas,077.632.914-80,5567991000112,1560.00,2026-03-18,Assistência TecFix,negativado,nao_reconhece_divida
+Vanessa Ribeiro Duarte,362.918.475-06,5567991000113,788.40,2026-05-09,Clínica Odonto Sorriso,negativado,pede_desconto
+Anderson Luiz Machado,815.243.760-27,5567991000114,3125.90,2026-01-25,Distribuidora Bebidas MS,negativado,quer_parcelar
+Beatriz Carvalho Nunes,204.557.318-64,5567991000115,120.00,2026-08-20,Salão Beleza Pura,negativado,quer_pagar_avista
+Rodrigo Pereira Antunes,679.130.844-15,5567991000116,5450.00,2025-10-30,Loja do Construtor,negativado,divida_alta_negocia_desconto
+Tatiane Moreira Lopes,143.802.567-90,5567991000117,367.80,2026-07-12,Magazine Central,negativado,sem_resposta
+Marcelo Batista Ramos,528.976.033-41,5567991000118,2890.00,2026-02-28,Concessionária AutoSul,negativado,quer_parcelar
+Aline Cristina Farias,390.615.278-52,5567991000119,94.50,2026-08-25,Farmácia Popular MS,negativado,valor_baixo_paga_rapido
+Leandro Sousa Cavalcanti,761.048.392-06,5567991000120,1785.30,2026-04-16,Móveis Bom Lar,negativado,pede_desconto
+Priscila Andrade Melo,085.723.146-77,5567991000121,540.00,2026-06-05,Academia Corpo em Forma,negativado,quer_parcelar
+Thiago Ferreira Barros,417.209.865-30,5567991000122,8200.00,2025-08-11,Financeira CredFácil,negativado,divida_muito_alta
+Renata Lima Gonçalves,236.891.507-48,5567991000123,278.90,2026-07-22,Boutique Elegance,negativado,quer_pagar_avista
+Fábio Junior Correia,594.037.812-69,5567991000124,1120.00,2026-05-14,Assistência TecFix,negativado,ja_pagou_contesta
+Simone Rocha Teixeira,168.450.729-03,5567991000125,655.40,2026-06-18,Clínica Odonto Sorriso,negativado,pede_desconto
+Wagner Oliveira Dias,703.512.986-24,5567991000126,3980.00,2026-01-08,Distribuidora Bebidas MS,negativado,divida_alta_parcela_longo
+Débora Nascimento Pinto,321.674.058-91,5567991000127,175.00,2026-08-09,Pet Shop Amigo Fiel,negativado,valor_baixo_paga_rapido
+Alexandre Campos Moura,846.129.703-55,5567991000128,2450.60,2026-03-27,Loja do Construtor,negativado,quer_parcelar
+Kelly Cristina Azevedo,059.238.641-70,5567991000129,398.00,2026-07-01,Salão Beleza Pura,negativado,nao_reconhece_divida
+Vinícius Rezende Cunha,472.906.153-88,5567991000130,11750.00,2025-06-19,Concessionária AutoSul,negativado,divida_muito_alta

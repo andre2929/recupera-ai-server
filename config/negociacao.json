@@ -1,0 +1,23 @@
+{
+  "_comentario": "Regras de negociacao. A CDL aprova estes limites. O bot NUNCA passa daqui.",
+  "credor_nome": "Central de Negociacoes CDL Campo Grande",
+  "desconto_avista": {
+    "_comentario": "Desconto maximo a vista por faixa de dias em atraso.",
+    "faixas": [
+      { "ate_dias": 90, "desconto_pct": 10 },
+      { "ate_dias": 180, "desconto_pct": 20 },
+      { "ate_dias": 365, "desconto_pct": 30 },
+      { "ate_dias": 99999, "desconto_pct": 40 }
+    ]
+  },
+  "parcelamento": {
+    "parcelas_max": 12,
+    "valor_min_parcela": 50.0,
+    "entrada_min_pct": 0,
+    "desconto_parcelado_pct": 0
+  },
+  "piso_negociacao_pct": 55,
+  "_piso_comentario": "Nunca aceitar acordo abaixo de 55% do valor original (teto de desconto real = 45%).",
+  "prazo_pix_horas": 24,
+  "baixa_spc_apos_pagamento": true
+}
