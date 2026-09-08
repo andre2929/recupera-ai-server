@@ -1,0 +1,16 @@
+name: keepalive
+on:
+  schedule:
+    - cron: '*/12 * * * *'   # a cada 12 min (Render free dorme aos 15)
+  workflow_dispatch:
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping servidor
+        run: |
+          URL="${KEEPALIVE_URL:-https://recupera-ai.onrender.com/health}"
+          echo "pingando $URL"
+          curl -fsS --max-time 40 "$URL" || echo "sem resposta (pode estar acordando)"
+    env:
+      KEEPALIVE_URL: ${{ vars.KEEPALIVE_URL }}
