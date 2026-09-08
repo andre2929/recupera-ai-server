@@ -68,6 +68,23 @@ export function temPix(texto) {
   return /br\.gov\.bcb\.pix/i.test(texto) || /\b[A-Z0-9]{40,}\b/.test(texto);
 }
 
+// Converte o mp3 em OGG/Opus (formato que o WhatsApp toca como nota de voz).
+// Cacheado. Requer ffmpeg no PATH.
+export async function gerarVozPtt(texto, voz = VOZ) {
+  const mp3 = await gerarVoz(texto, voz);
+  const ogg = mp3.replace(/\.mp3$/, '.ogg');
+  if (existsSync(ogg)) return ogg;
+  await new Promise((ok, err) => {
+    const p = spawn(process.env.FFMPEG_BIN || 'ffmpeg',
+      ['-y', '-i', mp3, '-c:a', 'libopus', '-b:a', '32k', '-ar', '48000', '-ac', '1', ogg],
+      { stdio: ['ignore', 'ignore', 'pipe'] });
+    let e = ''; p.stderr.on('data', (d) => (e += d));
+    p.on('close', (c) => (c === 0 && existsSync(ogg)) ? ok() : err(new Error('ffmpeg falhou: ' + e.slice(-200))));
+    p.on('error', err);
+  });
+  return ogg;
+}
+
 // Gera o mp3. Retorna o caminho. Cacheado por hash do (texto+voz).
 export function gerarVoz(texto, voz = VOZ) {
   const falado = falarTexto(texto);

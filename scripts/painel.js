@@ -4,7 +4,10 @@ import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { montarDados } from '../src/montar.js';
 import { paginaHTML } from '../src/painel-ui.js';
+import { paginaClienteHTML } from '../src/cliente-ui.js';
+import { paginaHomeHTML } from '../src/home-ui.js';
 import { gerarVoz } from '../src/voz.js';
+import * as wa from '../src/wa-manager.js';
 
 const PORTA = Number(process.env.PORTA_PAINEL || 8788);
 
@@ -20,11 +23,33 @@ createServer(async (req, res) => {
     } catch (e) { console.error('voz erro', e); res.writeHead(500).end('erro'); }
     return;
   }
+  // --- multi-numero WhatsApp ---
+  if (req.url.startsWith('/api/wa/')) {
+    const q = new URL(req.url, 'http://x');
+    const id = q.searchParams.get('id') || '1';
+    const acao = req.url.split('?')[0].split('/').pop();
+    let r;
+    if (acao === 'conectar') r = await wa.conectar(id);
+    else if (acao === 'desconectar') r = await wa.desconectar(id);
+    else r = wa.status(id); // status
+    res.writeHead(200, { 'content-type': 'application/json', 'cache-control': 'no-store' });
+    res.end(JSON.stringify(r));
+    return;
+  }
+  const u = req.url.split('?')[0];
+  if (u === '/' || u.startsWith('/index')) {
+    res.writeHead(200, { 'content-type': 'text/html; charset=utf-8' });
+    res.end(paginaHomeHTML());
+    return;
+  }
   const dados = await montarDados({ comAudio: true }); // audios cacheados
-  if (req.url === '/api/dados') {
+  if (u.startsWith('/cliente')) {
+    res.writeHead(200, { 'content-type': 'text/html; charset=utf-8' });
+    res.end(paginaClienteHTML(dados));
+  } else if (u === '/api/dados') {
     res.writeHead(200, { 'content-type': 'application/json' });
     res.end(JSON.stringify(dados));
-  } else {
+  } else { // /central e demais
     res.writeHead(200, { 'content-type': 'text/html; charset=utf-8' });
     res.end(paginaHTML(dados));
   }

@@ -11,7 +11,7 @@ import { criarWhatsApp } from './wa.js';
 import { abrir, processar, confirmarPagamento } from './brain.js';
 import { humanizar, iaAtiva } from './llm.js';
 import { modoPagamento } from './pagamento.js';
-import { gerarVoz, temPix } from './voz.js';
+import { gerarVozPtt, temPix } from './voz.js';
 
 const VOZ_ATIVA = process.env.VOZ_ATIVA !== '0'; // liga por padrao; VOZ_ATIVA=0 desliga
 import {
@@ -27,12 +27,13 @@ async function responder(dev, out, comVoz = false) {
     const txt = iaAtiva ? await humanizar(r, { persona: 'Marina', ultimaMsg: dev._ultima }) : r;
     // nota de voz para mensagens sem Pix (Pix precisa ser texto pra copiar)
     if (comVoz && VOZ_ATIVA && !temPix(txt)) {
-      try { await wa.enviarAudio(dev.telefone, await gerarVoz(txt)); }
+      try { await wa.enviarAudio(dev.telefone, await gerarVozPtt(txt)); }
       catch (e) { console.warn('voz falhou, seguindo em texto:', e.message); }
     }
+    await wa.digitando(dev.telefone, Math.min(4500, 900 + txt.length * 35)); // "digitando..." humano
     await wa.enviar(dev.telefone, txt);
     logMensagem(dev.id, 'saida', r);
-    await new Promise((s) => setTimeout(s, 900)); // ritmo humano entre mensagens
+    await new Promise((s) => setTimeout(s, 500)); // respiro entre mensagens
   }
   atualizarDevedor(dev.id, { estado: out.estado, ...out.updates });
   Object.assign(dev, out.updates || {});

@@ -12,10 +12,11 @@
     "pedir_comprovante": "Show! Fico no aguardo do comprovante aqui mesmo pra eu confirmar. 🙌",
     "comprovante_ok": "Recebi seu comprovante, {primeiro_nome}! ✅ Vou validar o pagamento e sua negativacao sera baixada em ate 5 dias uteis. Obrigada por resolver com a gente!",
     "pagamento_confirmado": "Pagamento confirmado, {primeiro_nome}! 🎉 Sua pendencia esta quitada e o processo de baixa da negativacao ja foi iniciado. Qualquer coisa, e so chamar.",
-    "contestacao": "Entendo, {primeiro_nome}. Se voce ja pagou ou nao reconhece essa cobranca, vou encaminhar seu caso pra um atendente humano verificar com o credor. Pode me dizer o que aconteceu (data do pagamento, comprovante, etc.)?",
+    "contestacao": "Entendo, {primeiro_nome}. Se voce ja pagou ou nao reconhece, me manda os detalhes (a data do pagamento e o comprovante, se tiver) que eu ja registro e verifico direto no sistema. Assim que confirmar, te retorno por aqui mesmo. Pode deixar comigo!",
     "fora_horario": "Recebi sua mensagem! Nosso atendimento e {horario_atendimento}. Retorno no proximo horario util, combinado?",
     "followup_1": "Oi, {primeiro_nome}! So passando pra saber se conseguiu ver minha mensagem sobre a pendencia com {credor}. A condicao especial ainda esta valendo. Posso te ajudar?",
     "encerramento_recusa": "Tudo bem, {primeiro_nome}. Vou deixar seu caso registrado. Quando quiser retomar, e so me chamar aqui que a condicao especial pode ser reavaliada. Um abraco!",
-    "nao_entendi": "Desculpa, {primeiro_nome}, nao captei direito. Voce prefere quitar *a vista com desconto* ou *parcelar*? Me diz que eu te passo os valores."
+    "nao_entendi": "Desculpa, {primeiro_nome}, nao captei direito. Voce prefere quitar *a vista com desconto* ou *parcelar*? Me diz que eu te passo os valores.",
+    "humano": "Haha imagina, {primeiro_nome}! Aqui e a Marina mesmo, da central de negociacao 😊 To aqui pra te ajudar a limpar seu nome sem enrolacao e resolvo tudo por aqui com voce. Bora? Prefere *a vista com desconto* ou *parcelar*?"
   }
 }

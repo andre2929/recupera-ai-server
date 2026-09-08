@@ -25,6 +25,7 @@ const RX = {
   aceita: /\b(sim|quero|pode|aceito|fechad|fechou|bora|vamos|ok|okay|beleza|blz|positivo|claro|com\s*certeza|manda|gera)/i,
   recusa: /(nao\s*(quero|posso|tenho|da|consigo|rola|vai\s*da)|agora\s*nao|depois|deixa\s*(pra|p)\s*depois|sem\s*condi)/i,
   saudacao: /\b(oi|ola|opa|bom\s*dia|boa\s*tarde|boa\s*noite|e\s*ai|eai|tudo\s*bem)\b/i,
+  humano: /(voce\s*e\s*(um\s*)?(rob|bot|maquin|ia\b)|isso\s*e\s*(um\s*)?(rob|bot)|e\s*(um\s*)?(rob|bot)\?|falar\s*com\s*(um\s*|uma\s*)?(humano|pessoa|atendente|gerente|consultor)|quero\s*(um\s*|uma\s*)?(humano|atendente|pessoa|consultor)|atendente\s*humano)/i,
 };
 
 export function classificar(texto, temAnexo = false) {
@@ -32,6 +33,7 @@ export function classificar(texto, temAnexo = false) {
   const t = String(texto || '').toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '');
   if (temAnexo) return 'comprovante';
   if (RX.contesta.test(t)) return 'contesta';
+  if (RX.humano.test(t)) return 'humano';
   if (RX.comprovante.test(t)) return 'comprovante';
   const mn = t.match(RX.parcelas_num);
   if (mn) return { tipo: 'parcelas_num', n: Math.max(1, parseInt(mn[1], 10)) };
@@ -96,6 +98,12 @@ export async function processar(dev, texto, temAnexo = false) {
   if (tipo === 'contesta' && dev.estado !== 'PAGO') {
     R('contestacao'); out.estado = 'CONTESTACAO';
     out.eventos.push({ tipo: 'contestacao', detalhe: texto });
+    return out;
+  }
+  // pediu falar com humano / perguntou se e robo -> resposta humanizada, segue o papo
+  if (tipo === 'humano') {
+    R('humano');
+    out.eventos.push({ tipo: 'pediu_humano', detalhe: texto });
     return out;
   }
 
@@ -194,8 +202,8 @@ export async function processar(dev, texto, temAnexo = false) {
       break;
 
     case 'CONTESTACAO':
-      out.respostas.push(preencher('Seu caso ja esta com um atendente, {primeiro_nome}. ' +
-        'Assim que verificarem com o credor, te retornamos. Obrigada pela paciencia!', vars(dev)));
+      out.respostas.push(preencher('Ja registrei seu caso e estou verificando seu pagamento no sistema, {primeiro_nome}. ' +
+        'Assim que confirmar, te retorno aqui mesmo. Se tiver o comprovante, pode me mandar que agiliza!', vars(dev)));
       break;
 
     case 'RECUSADO':

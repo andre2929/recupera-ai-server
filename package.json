@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "description": "RECUPERA.AI — IA de cobranca no WhatsApp (MVP): importa carteira, negocia, gera Pix e da baixa por comprovante.",
   "type": "module",
-  "engines": { "node": ">=22.5" },
+  "engines": {
+    "node": ">=22.5"
+  },
   "scripts": {
     "importar": "node scripts/importar.js",
     "sim": "node scripts/simular.js",
@@ -13,6 +15,7 @@
     "start": "node src/index.js"
   },
   "dependencies": {
+    "qrcode": "^1.5.4",
     "qrcode-terminal": "^0.12.0",
     "whatsapp-web.js": "^1.26.0"
   }

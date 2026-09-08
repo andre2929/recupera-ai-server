@@ -43,8 +43,9 @@ try {
     if (existsSync(p)) { ROBO = `<img class="robo-img" alt="RECUPERA.AI" src="data:${mime};base64,${readFileSync(p).toString('base64')}">`; break; }
   }
 } catch { /* usa SVG */ }
+export { ROBO };
 
-const LOGO = `<svg viewBox="0 0 66 54" class="flag" aria-hidden="true">
+export const LOGO = `<svg viewBox="0 0 66 54" class="flag" aria-hidden="true">
   <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
     <stop offset="0" stop-color="#1e56a8"/><stop offset="1" stop-color="#0d2f68"/></linearGradient></defs>
   <path d="M6 6 Q34 1 60 8 L60 34 Q34 41 6 37 Z" fill="url(#lg)"/>
@@ -52,7 +53,7 @@ const LOGO = `<svg viewBox="0 0 66 54" class="flag" aria-hidden="true">
   <path d="M6 37 Q30 31 60 35 L60 41 Q30 47 6 43 Z" fill="#1f9d57"/>
 </svg>`;
 
-const CSS = `
+export const CSS = `
 :root{
   --azul:#14418b;--azul2:#1e5eff;--azul-esc:#0b2550;--navy:#0a1f45;
   --verde:#1f9d57;--verde2:#00b389;--amarelo:#f5b301;--verm:#e0575b;
@@ -80,6 +81,8 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .nav a.active{background:#e8f1ff;color:var(--azul2);font-weight:700}
 .nav a.active .ic{color:var(--azul2)}
 .app.recolhido .nav a .tx{display:none}
+.switchlink{margin-top:auto;background:#f0f5ff;color:var(--azul2)!important;font-weight:700}
+.switchlink .ic{color:var(--azul2)!important}
 .side-foot{padding:16px;font-size:11px;color:#8f9bb0;border-top:1px solid var(--line)}
 .app.recolhido .side-foot{display:none}
 
@@ -228,6 +231,17 @@ select.ord{background:#fff;border:1px solid var(--line);border-radius:10px;paddi
 /* fab + bottom nav (mobile) */
 .fab{position:fixed;right:18px;bottom:18px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--azul2),#3f78ff);color:#fff;font-size:26px;box-shadow:0 8px 24px rgba(30,94,255,.5);z-index:40;display:flex;align-items:center;justify-content:center}
 .bottomnav{display:none}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;padding:12px 20px;border-radius:12px;font-size:13px;font-weight:600;box-shadow:0 10px 30px rgba(0,0,0,.25);opacity:0;transition:.3s;z-index:60}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.cfgin{border:1px solid var(--line);border-radius:9px;padding:9px 11px;font-size:13px;outline:none;font-family:inherit;width:100%}
+.cfgin:focus{border-color:var(--azul2)}
+.emptybox{padding:34px 20px;text-align:center;color:var(--muted)}
+.wamodal{position:fixed;inset:0;background:rgba(10,20,40,.55);display:none;align-items:center;justify-content:center;z-index:70;padding:16px}
+.wamodal.on{display:flex}
+.wabox{background:#fff;border-radius:16px;width:min(380px,96vw);overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.wahead{padding:13px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center}
+.wahead .x{margin-left:auto;font-size:22px;color:var(--muted);cursor:pointer;line-height:1}
+.wabody{padding:18px;text-align:center}
 
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(46,232,138,.6)}70%{box-shadow:0 0 0 9px rgba(46,232,138,0)}100%{box-shadow:0 0 0 0 rgba(46,232,138,0)}}
 @keyframes shine{0%{left:-60%}55%,100%{left:130%}}
@@ -295,6 +309,7 @@ function paint(){
  else if(VIEW==='relatorios')renderRelatorios();
  else if(VIEW==='recuperacao')renderRecuperacao();
  else if(VIEW==='baixa')renderBaixa();
+ else if(VIEW==='configuracoes')renderConfig();
  else renderSimples(VIEW);
 }
 
@@ -503,6 +518,60 @@ function renderBaixa(){
 }
 function darBaixa(id){BAIXADO[id]=true;renderBaixa();}
 
+/* ---- config: numeros do WhatsApp ---- */
+function lsGet(k,def){try{var v=localStorage.getItem(k);return v?JSON.parse(v):def;}catch(e){return def;}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+var NUMS=lsGet('rcpa_nums',[{apelido:'Cobrador 1',num:'',status:'offline'},{apelido:'Cobrador 2',num:'',status:'offline'},{apelido:'Cobrador 3',num:'',status:'offline'}]);
+var CFG=lsGet('rcpa_cfg',{intervalo:3,ini:'08:00',fim:'18:00',max:200,voz:true});
+var SB={offline:{r:'Offline',c:'#9aa7ba'},aguardando:{r:'Aguardando QR',c:'#f5b301'},conectado:{r:'Conectado',c:'#1f9d57'}};
+function renderConfig(){
+ var h='<div class="h2v">&#9881; Configuracoes — Numeros do WhatsApp</div>'+
+  '<div class="aviso">Cada numero e um <b>chip/aparelho</b> (cobrador). Conecte lendo o QR no servidor. Distribuir em varios numeros e o disparo espacado reduzem o risco de bloqueio.</div>';
+ h+='<div class="card"><h3>&#128241; Numeros de disparo</h3><table class="tbl"><thead><tr><th>Apelido</th><th>Numero (com DDD)</th><th>Status</th><th>Acoes</th></tr></thead><tbody>'+
+  NUMS.map(function(n,i){var s=SB[n.status]||SB.offline;
+   return '<tr><td><input class="cfgin" value="'+esc(n.apelido)+'" oninput="setNum('+i+',\\'apelido\\',this.value)"></td>'+
+    '<td><input class="cfgin" placeholder="55 67 99999-9999" value="'+esc(n.num)+'" oninput="setNum('+i+',\\'num\\',this.value)"></td>'+
+    '<td><span class="badge" style="background:'+s.c+'1f;color:'+s.c+'">'+s.r+'</span></td>'+
+    '<td class="acbtns"><button class="btn" style="background:#eef2f8;color:#1e56a8" onclick="conectar('+i+')">Conectar</button>'+
+    '<button class="btn" style="background:#fdecec;color:#c0392b" onclick="delNum('+i+')">Remover</button></td></tr>';}).join('')+
+  '</tbody></table><div style="padding:12px 16px"><button class="btn g" onclick="addNum()">+ Adicionar numero</button></div></div>';
+ h+='<div class="card" style="margin-top:16px"><h3>&#9889; Regras de disparo (anti-bloqueio)</h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:16px">'+
+  cfgCampo('Intervalo entre mensagens (seg)','intervalo','number',CFG.intervalo)+
+  cfgCampo('Maximo por numero/dia','max','number',CFG.max)+
+  cfgCampo('Horario inicio','ini','time',CFG.ini)+
+  cfgCampo('Horario fim','fim','time',CFG.fim)+
+  '<div class="full" style="grid-column:1/-1"><label style="font-size:12px;color:var(--muted);font-weight:600"><input type="checkbox" '+(CFG.voz?'checked':'')+' onchange="setCfg(\\'voz\\',this.checked)"> Enviar abertura como nota de voz (IA)</label></div>'+
+  '</div><div style="padding:0 16px 16px"><button class="btn g" onclick="salvarCfg()">Salvar configuracoes</button></div></div>';
+ document.getElementById('v-configuracoes').innerHTML=h;
+}
+function cfgCampo(lbl,k,tipo,val){return '<div><label style="display:block;font-size:12px;color:var(--muted);font-weight:600;margin-bottom:5px">'+lbl+'</label><input class="cfgin" type="'+tipo+'" value="'+val+'" oninput="setCfg(\\''+k+'\\',this.value)"></div>';}
+function setNum(i,f,v){NUMS[i][f]=v;}
+function setCfg(k,v){CFG[k]=v;}
+function addNum(){NUMS.push({apelido:'Cobrador '+(NUMS.length+1),num:'',status:'offline'});renderConfig();}
+function delNum(i){NUMS.splice(i,1);lsSet('rcpa_nums',NUMS);renderConfig();toast('Numero removido.');}
+var _wapoll;
+function conectar(i){
+ var ap=NUMS[i].apelido||('Cobrador '+(i+1));
+ abrirWa('Conectar '+ap,'<div class="emptybox">Iniciando instancia... aguarde o QR aparecer.</div>');
+ fetch('/api/wa/conectar?id='+i).then(function(r){if(!r.ok)throw 0;return r.json();}).then(function(){pollWa(i);})
+  .catch(function(){ // sem servidor (site estatico) = demo
+    NUMS[i].status='conectado';lsSet('rcpa_nums',NUMS);fecharWa();renderConfig();
+    toast('Modo demonstracao: numero marcado como conectado (sem servidor).');});
+}
+function pollWa(i){clearInterval(_wapoll);_wapoll=setInterval(function(){
+ fetch('/api/wa/status?id='+i).then(function(r){return r.json();}).then(function(s){
+  if(s.status==='aguardando'&&s.qr){setWaBody('<img src="'+s.qr+'" style="width:280px;height:280px;border-radius:10px"><div class="hint" style="margin-top:12px">Escaneie com o WhatsApp <b>deste chip</b>:<br>Aparelhos conectados &rarr; Conectar aparelho</div>');}
+  else if(s.status==='conectado'){clearInterval(_wapoll);NUMS[i].status='conectado';if(s.numero)NUMS[i].num=s.numero;lsSet('rcpa_nums',NUMS);fecharWa();renderConfig();toast('Numero conectado! '+(s.numero||''));}
+  else if(s.status==='erro'){clearInterval(_wapoll);setWaBody('<div class="emptybox" style="color:#c0392b">Erro ao conectar. Feche e tente de novo.</div>');}
+  else{setWaBody('<div class="emptybox">Preparando conexao... ('+(s.status||'')+')</div>');}
+ }).catch(function(){clearInterval(_wapoll);});
+},1500);}
+function abrirWa(t,b){document.getElementById('watit').textContent=t;setWaBody(b);document.getElementById('wamodal').classList.add('on');}
+function setWaBody(h){document.getElementById('wabody').innerHTML=h;}
+function fecharWa(){clearInterval(_wapoll);var m=document.getElementById('wamodal');if(m)m.classList.remove('on');}
+function salvarCfg(){lsSet('rcpa_nums',NUMS);lsSet('rcpa_cfg',CFG);toast('Configuracoes salvas!');}
+var _tt;function toast(msg){var t=document.getElementById('toast');if(!t){alert(msg);return;}t.textContent=msg;t.className='toast on';clearTimeout(_tt);_tt=setTimeout(function(){t.className='toast';},2800);}
+
 /* ---- simples ---- */
 function renderSimples(v){
  var t={configuracoes:'Configuracoes',ajuda:'Ajuda'};
@@ -545,6 +614,7 @@ export function paginaHTML(dados) {
       <a data-nav="baixa" onclick="go('baixa')"><span class="ic">&#9989;</span><span class="tx">Baixa SPC</span></a>
       <a data-nav="configuracoes" onclick="go('configuracoes')"><span class="ic">&#9881;</span><span class="tx">Configuracoes</span></a>
       <a data-nav="ajuda" onclick="go('ajuda')"><span class="ic">&#10067;</span><span class="tx">Ajuda</span></a>
+      <a class="switchlink" href="cliente.html"><span class="ic">&#128100;</span><span class="tx">Portal do Cliente &#8599;</span></a>
     </nav>
     <div class="side-foot">Recuperar e fazer o comercio<br>circular novamente.</div>
   </aside>
@@ -583,6 +653,8 @@ export function paginaHTML(dados) {
   </nav>
   <button class="fab" onclick="go('conversas')" title="RECUPERA.AI">&#129302;</button>
 </div>
+<div class="toast" id="toast"></div>
+<div class="wamodal" id="wamodal"><div class="wabox"><div class="wahead"><b id="watit">Conectar numero</b><span class="x" onclick="fecharWa()">&times;</span></div><div class="wabody" id="wabody"></div></div></div>
 <script>
 var DADOS=${JSON.stringify(dados)};
 var AUDIO=${JSON.stringify(AUDIO_URI)};
