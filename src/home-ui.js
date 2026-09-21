@@ -1,5 +1,5 @@
 // Tela inicial (escolha de acesso): Central CDL (agente) ou Portal do Cliente.
-import { LOGO, ROBO } from './painel-ui.js';
+import { LOGO, LOGO_IMG, ROBO } from './painel-ui.js';
 
 export function paginaHomeHTML() {
   return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">
@@ -14,6 +14,7 @@ canvas#bg{position:fixed;inset:0;width:100%;height:100%;opacity:.6;pointer-event
 .wrap{position:relative;z-index:1;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 20px;text-align:center}
 .brand{display:flex;align-items:center;gap:12px;margin-bottom:6px}
 .brand .flag{width:46px;height:38px;filter:drop-shadow(0 2px 6px rgba(0,0,0,.4))}
+.brand .brandimg{height:64px;width:auto;border-radius:8px;filter:drop-shadow(0 4px 10px rgba(0,0,0,.35))}
 .brand b{font-size:22px;font-weight:800}.brand span{color:#8fb4ff;font-size:12px;display:block;font-weight:600;text-align:left}
 .robo-img{height:150px;width:auto;margin:6px 0 2px;filter:drop-shadow(0 12px 22px rgba(0,0,0,.35));animation:bob 3.4s ease-in-out infinite}
 .robo{width:120px;height:120px;margin:6px 0}
@@ -38,7 +39,7 @@ h1 i{color:var(--amarelo);font-style:normal}
 </style></head><body>
 <canvas id="bg"></canvas>
 <div class="wrap">
-  <div class="brand">${LOGO}<div><b>CDL RECUPERA</b><span>RECUPERA.AI</span></div></div>
+  <div class="brand">${LOGO}${LOGO_IMG ? '' : '<div><b>CDL RECUPERA</b><span>RECUPERA.AI</span></div>'}</div>
   ${ROBO}
   <h1>Central Inteligente de <i>Negociacoes</i></h1>
   <p class="sub">Recuperacao de credito com IA humanizada no WhatsApp. Escolha como deseja entrar:</p>

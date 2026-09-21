@@ -45,13 +45,22 @@ try {
 } catch { /* usa SVG */ }
 export { ROBO };
 
-export const LOGO = `<svg viewBox="0 0 66 54" class="flag" aria-hidden="true">
+const LOGO_SVG = `<svg viewBox="0 0 66 54" class="flag" aria-hidden="true">
   <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
     <stop offset="0" stop-color="#1e56a8"/><stop offset="1" stop-color="#0d2f68"/></linearGradient></defs>
   <path d="M6 6 Q34 1 60 8 L60 34 Q34 41 6 37 Z" fill="url(#lg)"/>
   <path d="M6 34 Q30 28 60 33 L60 37 Q30 43 6 40 Z" fill="#f5b301"/>
   <path d="M6 37 Q30 31 60 35 L60 41 Q30 47 6 43 Z" fill="#1f9d57"/>
 </svg>`;
+// usa a logo oficial (data/logo.png) se existir; senao o SVG.
+let LOGO = LOGO_SVG, LOGO_IMG = false;
+try {
+  for (const [f, mime] of [['logo.png', 'image/png'], ['logo.jpg', 'image/jpeg'], ['logo.webp', 'image/webp']]) {
+    const p = resolve(raiz, 'data', f);
+    if (existsSync(p)) { LOGO = `<img class="brandimg" alt="CDL RECUPERA" src="data:${mime};base64,${readFileSync(p).toString('base64')}">`; LOGO_IMG = true; break; }
+  }
+} catch { /* usa SVG */ }
+export { LOGO, LOGO_IMG };
 
 export const CSS = `
 :root{
@@ -73,6 +82,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .app.recolhido{grid-template-columns:72px 1fr}
 .sidebar{background:#fff;color:#3f4a5e;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;border-right:1px solid var(--line)}
 .flag{width:34px;height:28px;flex:0 0 auto}
+.brandimg{height:36px;width:auto;display:block;border-radius:6px;flex:0 0 auto}
 .nav{padding:14px 10px;display:flex;flex-direction:column;gap:3px;flex:1}
 .nav a{display:flex;align-items:center;gap:13px;padding:11px 13px;border-radius:11px;color:#48546a;font-weight:600;font-size:13.5px;white-space:nowrap;transition:background .15s,color .15s}
 .nav a .ic{width:20px;text-align:center;flex:0 0 auto;font-size:16px;color:#7a8aa3}
@@ -622,7 +632,7 @@ export function paginaHTML(dados) {
     <header class="topbar">
       <canvas id="tcanvas"></canvas>
       <button class="burger" onclick="toggleSide()">&#9776;</button>
-      <div class="hlogo">${LOGO}<div class="bt"><b>CDL RECUPERA</b><span>RECUPERA.AI</span></div></div>
+      <div class="hlogo">${LOGO}${LOGO_IMG ? '' : '<div class="bt"><b>CDL RECUPERA</b><span>RECUPERA.AI</span></div>'}</div>
       <div class="tagline">Juntos por empresas <b>mais fortes!</b></div>
       <div class="top-right">
         <div class="online"><span class="p"></span><span>Sistema Online</span></div>

@@ -2,7 +2,7 @@
 // Ele envia inadimplentes p/ cobranca, acompanha, valida pagamento no financeiro,
 // pede inclusao/retirada SPC/Serasa, ve parcelamentos, metricas, graficos e o
 // historico de conversa. Reusa a identidade visual do painel do agente.
-import { CSS, LOGO, ROBO } from './painel-ui.js';
+import { CSS, LOGO, LOGO_IMG, ROBO } from './painel-ui.js';
 
 const CSS_CLI = `
 .form{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:18px}
@@ -331,7 +331,7 @@ function bg(){var c=document.getElementById('tcanvas');if(!c||(window.matchMedia
 document.addEventListener('DOMContentLoaded',function(){bg();paint();});
 `;
 
-export function paginaClienteHTML(dados, clienteNome = 'Comercio Demonstracao LTDA') {
+export function paginaClienteHTML(dados, clienteNome = 'CDL Campo Grande') {
   const nav = [
     ['visao', '&#8962;', 'Visao Geral'], ['recarga', '&#128179;', 'Recarga de Creditos'],
     ['enviar', '&#10133;', 'Enviar Devedor'],
@@ -348,17 +348,17 @@ export function paginaClienteHTML(dados, clienteNome = 'Comercio Demonstracao LT
 <div class="app" id="app">
   <aside class="sidebar"><nav class="nav">${navHTML()}
       <a class="switchlink" href="central.html"><span class="ic">&#128736;</span><span class="tx">Painel do Agente &#8599;</span></a></nav>
-    <div class="side-foot">Portal do Cliente<br>CDL RECUPERA</div></aside>
+    <div class="side-foot">Camara de Dirigentes Lojistas<br>de Campo Grande / MS</div></aside>
   <div class="main">
     <header class="topbar"><canvas id="tcanvas"></canvas>
       <button class="burger" onclick="toggleSide()">&#9776;</button>
-      <div class="hlogo">${LOGO}<div class="bt"><b>CDL RECUPERA</b><span>Portal do Cliente</span></div></div>
+      <div class="hlogo">${LOGO}${LOGO_IMG ? '' : '<div class="bt"><b>CDL RECUPERA</b><span>Portal do Cliente</span></div>'}</div>
       <div class="tagline">Sua recuperacao, <b>transparente</b></div>
       <div class="top-right"><div class="online"><span class="p"></span><span>Cobranca ativa</span></div>
-        <div class="user"><div class="avatar">${clienteNome.charAt(0)}</div><div class="un"><b>${clienteNome}</b><br><span>Cliente</span></div></div></div>
+        <div class="user"><div class="avatar">C</div><div class="un"><b>${clienteNome}</b><br><span>Portal do Cliente</span></div></div></div>
     </header>
     <main class="content">${secs}</main>
-    <footer class="rodape"><b>CDL RECUPERA</b> · Portal do Cliente
+    <footer class="rodape"><b>${clienteNome}</b> · CNPJ 03.962.883/0001-09 · (67) 3320-4000
       <div class="chips"><span>Seguranca</span><span>Transparencia</span><span>Resultados</span></div>
       <span class="con">● Conectado</span></footer>
   </div>
