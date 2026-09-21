@@ -10,6 +10,12 @@ import { gerarVoz } from '../src/voz.js';
 import * as wa from '../src/wa-manager.js';
 import { PACOTES, criarRecarga, confirmarRecarga } from '../src/recarga.js';
 import { saldo as credSaldo, usados as credUsados, historico as credHist } from '../src/creditos.js';
+import { lojistas, auditar, listaAuditoria, zerarBase, recargasPagas, resumoGestor, aprendizado } from '../src/db.js';
+import { paginaGestorHTML } from '../src/gestor-ui.js';
+import { readFileSync } from 'node:fs';
+import { resolve as rpath, dirname as rdir } from 'node:path';
+import { fileURLToPath as rfurl } from 'node:url';
+const DB_PATH = rpath(rdir(rfurl(import.meta.url)), '..', 'data', 'recupera.db');
 
 const PORTA = Number(process.env.PORTA_PAINEL || 8788);
 
@@ -23,6 +29,30 @@ createServer(async (req, res) => {
       res.writeHead(200, { 'content-type': 'audio/mpeg', 'cache-control': 'no-store' });
       res.end(await readFile(mp3));
     } catch (e) { console.error('voz erro', e); res.writeHead(500).end('erro'); }
+    return;
+  }
+  // --- gestor: clientes, financeiro, auditoria, backup, zerar ---
+  if (req.url.startsWith('/api/gestor/') || req.url.startsWith('/api/backup') || req.url.startsWith('/api/auditar')) {
+    const q = new URL(req.url, 'http://x');
+    const acao = req.url.split('?')[0].split('/').pop();
+    if (acao === 'backup') {
+      auditar('backup', 'Copia de seguranca baixada');
+      const dia = new Date().toISOString().slice(0, 10);
+      res.writeHead(200, { 'content-type': 'application/octet-stream', 'content-disposition': `attachment; filename="recupera-backup-${dia}.db"` });
+      res.end(readFileSync(DB_PATH));
+      return;
+    }
+    let r;
+    if (acao === 'resumo') r = resumoGestor();
+    else if (acao === 'clientes') r = lojistas();
+    else if (acao === 'financeiro') r = recargasPagas();
+    else if (acao === 'auditoria') r = listaAuditoria();
+    else if (acao === 'aprendizado') r = aprendizado();
+    else if (acao === 'zerar') { zerarBase(); r = { ok: true }; }
+    else if (acao === 'auditar') { auditar(q.searchParams.get('acao'), q.searchParams.get('detalhe')); r = { ok: true }; }
+    else r = { erro: 'acao invalida' };
+    res.writeHead(200, { 'content-type': 'application/json', 'cache-control': 'no-store' });
+    res.end(JSON.stringify(r));
     return;
   }
   // --- recarga / creditos ---
@@ -58,6 +88,11 @@ createServer(async (req, res) => {
   if (u === '/' || u.startsWith('/index')) {
     res.writeHead(200, { 'content-type': 'text/html; charset=utf-8' });
     res.end(paginaHomeHTML());
+    return;
+  }
+  if (u.startsWith('/gestor')) {
+    res.writeHead(200, { 'content-type': 'text/html; charset=utf-8' });
+    res.end(paginaGestorHTML());
     return;
   }
   const dados = await montarDados({ comAudio: true }); // audios cacheados

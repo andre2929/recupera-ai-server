@@ -135,7 +135,7 @@ footer.rodape .con{margin-left:auto;color:var(--verde);font-weight:600}
 .robo .maoE{transform-box:fill-box;transform-origin:50% 90%;animation:wave 1.4s ease-in-out infinite reverse}
 @keyframes blink{0%,90%,100%{transform:scaleY(1)}94%{transform:scaleY(.1)}}
 @keyframes wave{0%,100%{transform:rotate(-12deg)}50%{transform:rotate(14deg)}}
-@keyframes bob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-6px) rotate(2deg)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
 .banner h2{font-size:18px;margin-bottom:3px}.banner p{font-size:13px;color:#cfe0ff;max-width:520px}
 .banner .st{margin-left:auto;display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);padding:8px 14px;border-radius:100px;font-size:12.5px;font-weight:600;white-space:nowrap}
 .banner .st .p{width:9px;height:9px;border-radius:50%;background:#2ee88a;animation:pulse 2s infinite}

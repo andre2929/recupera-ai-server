@@ -62,6 +62,20 @@ db.exec(`
     criado_em   TEXT DEFAULT (datetime('now','localtime'))
   );
 
+  -- Lojistas/clientes do SaaS (a CDL usa e revende aos lojistas).
+  CREATE TABLE IF NOT EXISTS lojistas (
+    id            INTEGER PRIMARY KEY AUTOINCREMENT,
+    razao_social  TEXT NOT NULL,
+    nome_fantasia TEXT,
+    cnpj          TEXT,
+    endereco      TEXT,
+    telefone      TEXT,
+    email         TEXT,
+    plano         TEXT DEFAULT 'Recarga',
+    status        TEXT DEFAULT 'ativo',
+    criado_em     TEXT DEFAULT (datetime('now','localtime'))
+  );
+
   -- Compras de recarga (PIX). idempotencia por pix_id.
   CREATE TABLE IF NOT EXISTS recargas (
     id            INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -75,7 +89,62 @@ db.exec(`
     criado_em     TEXT DEFAULT (datetime('now','localtime')),
     pago_em       TEXT
   );
+
+  -- Auditoria: registra toda alteracao feita no sistema.
+  CREATE TABLE IF NOT EXISTS auditoria (
+    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    acao       TEXT NOT NULL,
+    detalhe    TEXT,
+    quem       TEXT DEFAULT 'Gestor',
+    criado_em  TEXT DEFAULT (datetime('now','localtime'))
+  );
 `);
+
+// seed de lojistas (idempotente): a CDL + exemplos
+if (db.prepare('SELECT COUNT(*) n FROM lojistas').get().n === 0) {
+  const insL = db.prepare('INSERT INTO lojistas (razao_social,nome_fantasia,cnpj,endereco,telefone,email,plano,status) VALUES (?,?,?,?,?,?,?,?)');
+  insL.run('Camara de Dirigentes Lojistas de Campo Grande / MS', 'CDL Campo Grande', '03.962.883/0001-09', 'Rua Antonio Maria Coelho Correa, 417 - Jardim Monte Libano', '(67) 3320-4000', 'contato@cdlcampogrande.com.br', 'Escala', 'ativo');
+  insL.run('Oticas Visao Clara LTDA', 'Oticas Visao Clara', '12.345.678/0001-90', 'Av. Afonso Pena, 1000 - Centro', '(67) 3025-1000', 'contato@visaoclara.com.br', 'Recarga', 'ativo');
+  insL.run('Moveis Bom Lar LTDA', 'Moveis Bom Lar', '98.765.432/0001-10', 'Rua 14 de Julho, 500 - Centro', '(67) 3384-2000', 'vendas@bomlar.com.br', 'Profissional', 'ativo');
+}
+
+// --- lojistas / auditoria ---
+export const lojistas = () => db.prepare(
+  `SELECT l.*, COALESCE((SELECT SUM(quantidade) FROM creditos c WHERE c.lojista_id=l.id),0) creditos
+   FROM lojistas l ORDER BY l.id`).all();
+
+const _insAud = db.prepare('INSERT INTO auditoria (acao,detalhe,quem) VALUES (?,?,?)');
+export const auditar = (acao, detalhe = null, quem = 'Gestor') => { try { _insAud.run(acao, detalhe, quem); } catch {} };
+export const listaAuditoria = (limite = 60) =>
+  db.prepare('SELECT acao,detalhe,quem,criado_em FROM auditoria ORDER BY id DESC LIMIT ?').all(limite);
+
+export function zerarBase() {
+  db.exec('DELETE FROM devedores; DELETE FROM mensagens; DELETE FROM eventos; DELETE FROM creditos; DELETE FROM recargas;');
+  auditar('zerar_base', 'Base operacional zerada (devedores, conversas, creditos e recargas)');
+}
+
+export const recargasPagas = () => db.prepare(
+  `SELECT r.pacote,r.creditos,r.valor_cents,r.status,r.criado_em,r.pago_em, l.nome_fantasia
+   FROM recargas r LEFT JOIN lojistas l ON l.id=r.lojista_id ORDER BY r.id DESC LIMIT 50`).all();
+
+export function resumoGestor() {
+  const cli = db.prepare('SELECT COUNT(*) n FROM lojistas').get().n;
+  const rec = db.prepare("SELECT COALESCE(SUM(valor_cents),0) v, COUNT(*) n, COALESCE(SUM(creditos),0) c FROM recargas WHERE status='pago'").get();
+  const usados = -db.prepare("SELECT COALESCE(SUM(quantidade),0) s FROM creditos WHERE tipo='consumo'").get().s;
+  const r = resumo();
+  return { clientes: cli, receita_cents: rec.v, recargas: rec.n, creditos_vendidos: rec.c, creditos_usados: usados, devedores: r.total, recuperado: r.recuperado };
+}
+
+// Aprendizado da IA: mede (honesto, do banco real) o que converte melhor.
+export function aprendizado() {
+  const porPerfil = db.prepare(
+    `SELECT COALESCE(perfil_teste,'sem_perfil') perfil, COUNT(*) total,
+       SUM(CASE WHEN estado IN ('PAGO','COMPROVANTE_RECEBIDO') THEN 1 ELSE 0 END) pagos
+     FROM devedores GROUP BY perfil ORDER BY pagos DESC`).all()
+    .map((p) => ({ ...p, conv: p.total ? Math.round(100 * p.pagos / p.total) : 0 }));
+  const evt = db.prepare('SELECT tipo, COUNT(*) n FROM eventos GROUP BY tipo').all();
+  return { porPerfil, eventos: evt };
+}
 
 // --- devedores ---
 const _upsert = db.prepare(`

@@ -21,7 +21,8 @@ canvas#bg{position:fixed;inset:0;width:100%;height:100%;opacity:.6;pointer-event
 h1{font-size:30px;font-weight:800;letter-spacing:-.02em;margin-top:6px}
 h1 i{color:var(--amarelo);font-style:normal}
 .sub{color:#bcd0ef;font-size:15px;margin:8px 0 30px;max-width:520px}
-.cards{display:grid;grid-template-columns:1fr 1fr;gap:20px;width:100%;max-width:760px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:18px;width:100%;max-width:900px}
+.acesso.ges .ic{background:linear-gradient(135deg,#8b5cf6,#6d28d9)}
 .acesso{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:18px;padding:26px 22px;
  text-decoration:none;color:#fff;transition:.2s;backdrop-filter:blur(4px);display:flex;flex-direction:column;align-items:center;gap:10px}
 .acesso:hover{transform:translateY(-4px);background:rgba(255,255,255,.12);border-color:rgba(120,170,255,.5);box-shadow:0 18px 40px rgba(0,0,0,.3)}
@@ -33,7 +34,7 @@ h1 i{color:var(--amarelo);font-style:normal}
 .acesso .go{margin-top:6px;font-size:13px;font-weight:700;color:#9fc0ff}
 .acesso.cli .go{color:#7fe8b6}
 .foot{position:relative;z-index:1;text-align:center;padding:16px;color:#7f97c4;font-size:12px}
-@keyframes bob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-7px) rotate(2deg)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
 @media(max-width:640px){.cards{grid-template-columns:1fr}h1{font-size:24px}.robo-img{height:120px}}
 @media(prefers-reduced-motion:reduce){canvas#bg{display:none}.robo-img{animation:none}}
 </style></head><body>
@@ -53,6 +54,11 @@ h1 i{color:var(--amarelo);font-style:normal}
       <div class="ic">&#127970;</div><h2>Portal do Cliente</h2>
       <p>Para o credor: envie inadimplentes, acompanhe a recuperacao, valide pagamentos e SPC/Serasa.</p>
       <div class="go">Entrar como cliente &#8594;</div>
+    </a>
+    <a class="acesso ges" href="gestor.html">
+      <div class="ic">&#128200;</div><h2>Painel do Gestor</h2>
+      <p>Administracao: clientes, faturamento, aprendizado da IA, auditoria, backup e configuracoes.</p>
+      <div class="go">Entrar como gestor &#8594;</div>
     </a>
   </div>
 </div>

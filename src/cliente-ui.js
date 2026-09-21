@@ -94,8 +94,8 @@ function rVisao(){
  var pend=a.filter(pendValid).length;
  var taxa=a.length?Math.round(100*rec.length/a.length):0;
  var tot=a.reduce(function(s,d){return s+d.valor;},0);var ticket=a.length?tot/a.length:0;
- var h='<div class="banner"><div class="bot">'+(ROBO_IMG?'<div class="mascote">'+ROBO_M+'<span class="lid"></span></div>':ROBO_M)+'</div>'+
-  '<div><h2>Bem-vindo ao seu Portal RECUPERA.AI</h2><p>Envie seus inadimplentes, acompanhe a recuperacao em tempo real e valide os pagamentos direto com seu financeiro.</p></div>'+
+ var h='<div class="banner"><div class="bot" onclick="falarRobo()" style="cursor:pointer" title="Toque pra me ouvir">'+(ROBO_IMG?'<div class="mascote">'+ROBO_M+'<span class="lid"></span></div>':ROBO_M)+'</div>'+
+  '<div><h2>Bem-vindo ao seu Portal RECUPERA.AI</h2><p>Envie seus inadimplentes, acompanhe a recuperacao em tempo real e valide os pagamentos direto com seu financeiro.</p><div style="font-size:12px;color:#bcd0ef;margin-top:6px">&#128266; Toque no robo pra me ouvir</div></div>'+
   '<div class="st"><span class="p"></span>Cobranca ativa</div></div>';
  // destaque grafico: anel de recuperacao
  h+='<div class="card"><div class="destaque">'+ring(taxa)+'<div><div style="font-size:15px;font-weight:800;color:var(--navy);margin-bottom:12px">Desempenho da carteira</div><div class="dstats">'+
@@ -320,6 +320,37 @@ function fechar(){document.getElementById('modal').classList.remove('on');}
 /* TOAST */
 var _tt;
 function toast(msg,ok){var t=document.getElementById('toast');t.className='toast on'+(ok?' ok':'');t.innerHTML=(ok?'&#9989; ':'&#9888; ')+esc(msg);clearTimeout(_tt);_tt=setTimeout(function(){t.className='toast';},3200);}
+
+/* ASSISTENTE (o robozinho responde e faz) */
+var _robau;
+function dizer(txt){try{if(_robau)_robau.pause();_robau=new Audio('/api/voz?texto='+encodeURIComponent(txt));_robau.play();}catch(e){}}
+function respAssist(p){
+ var t=p.toLowerCase();var d=DADOS.devedores;var pagos=d.filter(function(x){return grp(x)==='pago';});
+ var rec=pagos.reduce(function(s,x){return s+valorDe(x);},0);
+ if(/recuper|entrou|dinheiro|quanto/.test(t))return 'Ate agora recuperei '+money(rec)+' pra voce, com '+pagos.length+' acordos fechados.';
+ if(/pagaram|pagou|acordo|fechou/.test(t))return pagos.length+' devedores ja pagaram, somando '+money(rec)+'.';
+ if(/credito|saldo|recarga/.test(t))return 'Voce compra creditos na aba Recarga. Cada credito eu uso pra trabalhar um devedor.';
+ if(/quantos|devedor|carteira|inadimpl/.test(t))return 'Sua carteira tem '+d.length+' devedores, e '+pagos.length+' ja foram resolvidos.';
+ if(/contest|reclam|nao pagou|problema/.test(t))return d.filter(function(x){return grp(x)==='contest';}).length+' casos em contestacao, ja encaminhados pra verificacao.';
+ if(/negoci/.test(t))return d.filter(function(x){return grp(x)==='neg';}).length+' devedores estao em negociacao agora.';
+ if(/como funciona|como que funciona|explica|passo a passo|o que e isso|como usa/.test(t))return 'Simples: voce compra creditos, envia sua lista de devedores, e eu abordo cada um no WhatsApp com voz humanizada, negocio, gero o Pix e dou baixa quando paga. Voce so acompanha aqui.';
+ if(/como envi|enviar devedor|cadastr|mandar a lista|importar/.test(t))return 'Na aba Enviar Devedor voce coloca nome, telefone e valor. Eu começo a cobrar automaticamente pelo WhatsApp.';
+ if(/como receb|onde cai|dinheiro cai|minha conta|receber/.test(t))return 'O Pix cai direto na conta do lojista. Depois o financeiro valida e a baixa e liberada. Nada passa por fora.';
+ if(/seguro|lgpd|legal|risco|golpe/.test(t))return 'Tudo dentro da LGPD, com tom respeitoso e sem constrangimento, e com auditoria de cada acao feita no sistema.';
+ if(/pix|como paga|copia e cola/.test(t))return 'Na conversa eu gero o Pix copia e cola. O devedor paga na hora e manda o comprovante, e eu confirmo.';
+ if(/spc|serasa|negativ|limpar nome/.test(t))return 'Quem nao paga pode ser incluido no SPC ou Serasa; quem paga e retirado apos a validacao do financeiro.';
+ if(/oi|ola|bom dia|boa tarde|boa noite|tudo bem|quem e voce/.test(t))return 'Oi! Eu sou o assistente da RECUPERA.AI. Pergunta o que quiser sobre sua recuperacao ou sobre como o sistema funciona.';
+ return 'Posso explicar como o sistema funciona, dizer quanto recuperei, quantos pagaram, ou abrir a recarga. E so pedir!';
+}
+function falarRobo(){
+ var p=prompt('Fala comigo! Ex: "quanto ja recuperei?", "quantos pagaram?", "meus creditos", "abrir recarga"');
+ if(p===null)return;
+ if(!p.trim()){dizer('Oi! Eu sou o assistente da RECUPERA ponto AI, pronto pra recuperar seu dinheiro no automatico.');return;}
+ var t=p.toLowerCase();
+ if(/recarga|comprar credito|creditos?/.test(t)&&/abrir|ir|quero|comprar|ver/.test(t)){go('recarga');dizer('Abrindo a recarga de creditos pra voce.');return;}
+ if(/enviar|cadastrar|mandar devedor|novo devedor/.test(t)){go('enviar');dizer('Abrindo a tela de enviar devedor.');return;}
+ var r=respAssist(p);toast(r,true);dizer(r);
+}
 function toggleSide(){document.getElementById('app').classList.toggle('recolhido');}
 function bg(){var c=document.getElementById('tcanvas');if(!c||(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches))return;var x=c.getContext('2d');
  function rs(){c.width=c.offsetWidth;c.height=c.offsetHeight;}rs();window.addEventListener('resize',rs);
