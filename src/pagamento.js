@@ -21,13 +21,16 @@ function campo(id, valor) {
   return id + String(valor.length).padStart(2, '0') + valor;
 }
 
-// Monta um BR Code Pix estatico VALIDO no formato (chave de teste). Bom pra demo:
-// gera um copia-e-cola legivel; nao cai numa conta real no modo mock.
+// Chave Pix de recebimento. Padrao: CNPJ da CDL (so digitos). Configuravel por env.
+const PIX_CHAVE = (process.env.PIX_CHAVE || '03962883000109').replace(/\D/g, '') || process.env.PIX_CHAVE;
+const PIX_NOME = process.env.PIX_NOME || 'CDL CAMPO GRANDE';
+const PIX_CIDADE = process.env.PIX_CIDADE || 'CAMPO GRANDE';
+
+// Monta um BR Code Pix estatico VALIDO usando a chave (CNPJ). Copia-e-cola pagavel.
 function pixMock({ valor, nome, cidade, txid }) {
-  const chave = 'recupera-teste@cdlcg.com.br';
-  const merchant = campo('00', 'br.gov.bcb.pix') + campo('01', chave);
-  const nomeR = (nome || 'RECUPERA AI').normalize('NFD').replace(/[^\x20-\x7E]/g, '').slice(0, 25).toUpperCase();
-  const cidadeR = (cidade || 'CAMPO GRANDE').normalize('NFD').replace(/[^\x20-\x7E]/g, '').slice(0, 15).toUpperCase();
+  const merchant = campo('00', 'br.gov.bcb.pix') + campo('01', PIX_CHAVE);
+  const nomeR = (PIX_NOME).normalize('NFD').replace(/[^\x20-\x7E]/g, '').slice(0, 25).toUpperCase();
+  const cidadeR = (cidade || PIX_CIDADE).normalize('NFD').replace(/[^\x20-\x7E]/g, '').slice(0, 15).toUpperCase();
   const addfields = campo('05', String(txid).slice(0, 25));
   let payload =
     campo('00', '01') +
