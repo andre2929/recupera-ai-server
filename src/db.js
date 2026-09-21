@@ -47,6 +47,34 @@ db.exec(`
     detalhe    TEXT,
     criado_em  TEXT DEFAULT (datetime('now','localtime'))
   );
+
+  -- ===== camada SaaS: creditos / recarga (por lojista) =====
+  -- Ledger de creditos: cada linha e um movimento; saldo = SUM(quantidade).
+  CREATE TABLE IF NOT EXISTS creditos (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    lojista_id  INTEGER NOT NULL DEFAULT 1,
+    tipo        TEXT NOT NULL,          -- recarga | consumo | ajuste | bonus
+    quantidade  INTEGER NOT NULL,       -- + credita, - consome
+    saldo_apos  INTEGER,
+    ref_tipo    TEXT,                   -- recarga | devedor | manual
+    ref_id      TEXT,
+    descricao   TEXT,
+    criado_em   TEXT DEFAULT (datetime('now','localtime'))
+  );
+
+  -- Compras de recarga (PIX). idempotencia por pix_id.
+  CREATE TABLE IF NOT EXISTS recargas (
+    id            INTEGER PRIMARY KEY AUTOINCREMENT,
+    lojista_id    INTEGER NOT NULL DEFAULT 1,
+    pacote        TEXT NOT NULL,
+    creditos      INTEGER NOT NULL,
+    valor_cents   INTEGER NOT NULL,     -- dinheiro sempre em centavos
+    pix_id        TEXT UNIQUE,
+    pix_copia     TEXT,
+    status        TEXT NOT NULL DEFAULT 'pendente', -- pendente | pago | expirado
+    criado_em     TEXT DEFAULT (datetime('now','localtime')),
+    pago_em       TEXT
+  );
 `);
 
 // --- devedores ---

@@ -9,6 +9,8 @@ import { paginaClienteHTML } from './src/cliente-ui.js';
 import { paginaHomeHTML } from './src/home-ui.js';
 import { gerarVoz } from './src/voz.js';
 import * as wa from './src/wa-manager.js';
+import { PACOTES, criarRecarga, confirmarRecarga } from './src/recarga.js';
+import { saldo as credSaldo, usados as credUsados, historico as credHist } from './src/creditos.js';
 
 const PORTA = Number(process.env.PORT || 8788);
 
@@ -25,6 +27,18 @@ const servidor = createServer(async (req, res) => {
       return;
     }
     if (req.url === '/health') { res.writeHead(200).end('ok'); return; }
+    if (req.url.startsWith('/api/recarga/') || req.url.startsWith('/api/creditos')) {
+      const q = new URL(req.url, 'http://x');
+      const acao = req.url.split('?')[0].split('/').pop();
+      let r;
+      if (acao === 'pacotes' || acao === 'creditos') r = { saldo: credSaldo(1), usados: credUsados(1), pacotes: PACOTES, historico: credHist(1) };
+      else if (acao === 'comprar') { const c = await criarRecarga(1, q.searchParams.get('pacote')); r = { pix: c.pix, pacote: c.pacote }; }
+      else if (acao === 'confirmar') r = confirmarRecarga(q.searchParams.get('pix'));
+      else r = { erro: 'acao invalida' };
+      res.writeHead(200, { 'content-type': 'application/json', 'cache-control': 'no-store' });
+      res.end(JSON.stringify(r));
+      return;
+    }
     if (req.url.startsWith('/api/wa/')) {
       const id = new URL(req.url, 'http://x').searchParams.get('id') || '1';
       const acao = req.url.split('?')[0].split('/').pop();

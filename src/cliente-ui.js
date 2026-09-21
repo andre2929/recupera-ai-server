@@ -36,6 +36,8 @@ const CSS_CLI = `
 .emptybox{padding:40px 20px;text-align:center;color:var(--muted)}
 .emptybox .big{font-size:38px;opacity:.4;margin-bottom:8px}
 .hint{font-size:11.5px;color:var(--muted);margin-top:4px}
+.pacotes{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:760px){.pacotes{grid-template-columns:1fr}}
 .destaque{display:grid;grid-template-columns:160px 1fr;gap:22px;align-items:center;padding:20px}
 .ringwrap{position:relative;width:160px;height:160px}
 .ringsvg{width:160px;height:160px;transform:rotate(-90deg)}
@@ -81,7 +83,7 @@ function go(v){VIEW=v;paint();window.scrollTo(0,0);}
 function paint(){
  document.querySelectorAll('[data-nav]').forEach(function(a){a.classList.toggle('active',a.getAttribute('data-nav')===VIEW);});
  document.querySelectorAll('section[data-view]').forEach(function(s){s.hidden=s.getAttribute('data-view')!==VIEW;});
- ({visao:rVisao,enviar:rEnviar,meus:rMeus,validar:rValidar,spc:rSpc,parcelas:rParcelas,relatorios:rRel}[VIEW]||function(){})();
+ ({visao:rVisao,recarga:rRecarga,enviar:rEnviar,meus:rMeus,validar:rValidar,spc:rSpc,parcelas:rParcelas,relatorios:rRel}[VIEW]||function(){})();
 }
 function kpi(n,l,cls){return '<div class="kpi"><div class="ki '+(cls||'b1')+'">'+'</div><div><div class="n">'+n+'</div><div class="l">'+l+'</div></div></div>';}
 
@@ -240,6 +242,69 @@ function rRel(){
 }
 function setRel(k){REL=k;rRel();}
 
+/* RECARGA DE CREDITOS (self-service, PIX) */
+var CRED={saldo:0,usados:0,pacotes:[]};
+function rRecarga(){
+ var el=document.getElementById('v-recarga');
+ el.innerHTML='<div class="h2v">&#128179; Recarga de creditos</div><div class="card"><div class="emptybox">Carregando...</div></div>';
+ fetch('/api/recarga/pacotes').then(function(r){return r.json();}).then(function(d){CRED=d;pintaRecarga();})
+  .catch(function(){el.innerHTML='<div class="h2v">&#128179; Recarga de creditos</div><div class="aviso">A recarga funciona no servidor (recupera-ai.onrender.com). Nesta demo estatica ela nao processa PIX.</div>'+pacotesHTML(true);});
+}
+function pintaRecarga(){
+ var el=document.getElementById('v-recarga');
+ el.innerHTML='<div class="h2v">&#128179; Recarga de creditos</div>'+
+  '<div class="card"><div class="destaque" style="grid-template-columns:150px 1fr">'+ring2(CRED.saldo,CRED.usados)+
+   '<div><div style="font-size:15px;font-weight:800;color:var(--navy);margin-bottom:12px">Seus creditos</div><div class="dstats">'+
+   '<div class="dstat"><div class="v g">'+CRED.saldo+'</div><div class="l">Creditos disponiveis</div></div>'+
+   '<div class="dstat"><div class="v">'+CRED.usados+'</div><div class="l">Ja utilizados</div></div>'+
+   '</div><div class="hint" style="margin-top:8px">1 credito = 1 devedor que a IA trabalha. Sem credito, a IA nao cobra.</div></div></div></div>'+
+  '<div class="h2v" style="font-size:14px;margin-top:18px">Escolha uma recarga</div>'+pacotesHTML(false)+
+  '<div class="card" style="margin-top:16px"><h3>&#128220; Historico</h3>'+histHTML()+'</div>';
+}
+function pacotesHTML(demo){
+ var ps=CRED.pacotes&&CRED.pacotes.length?CRED.pacotes:[{id:'teste',nome:'Teste',creditos:200,valor_cents:60000},{id:'media',nome:'Media',creditos:500,valor_cents:125000},{id:'cheia',nome:'Cheia',creditos:1000,valor_cents:200000}];
+ return '<div class="pacotes">'+ps.map(function(p){
+  var pd=(p.valor_cents/100/p.creditos);
+  return '<div class="plano'+(p.id==='media'?' dest':' alt')+'"><span class="badge">'+(p.id==='media'?'MAIS ESCOLHIDO':p.nome.toUpperCase())+'</span>'+
+   '<h3>'+p.creditos+' devedores</h3><div class="desc">R$ '+pd.toFixed(2).replace('.',',')+' por devedor</div>'+
+   '<div style="font-size:24px;font-weight:800;color:var(--navy)">'+money(p.valor_cents/100)+'</div>'+
+   '<button class="btnp" style="width:100%;margin-top:12px" onclick="comprar(\\''+p.id+'\\')"'+(demo?' disabled':'')+'>Comprar via Pix</button></div>';
+ }).join('')+'</div>';
+}
+function histHTML(){
+ if(!CRED.historico||!CRED.historico.length)return '<div class="emptybox">Nenhum movimento ainda.</div>';
+ return '<table class="tbl"><thead><tr><th>Movimento</th><th>Qtd</th><th>Saldo</th><th>Quando</th></tr></thead><tbody>'+
+  CRED.historico.map(function(h){var pos=h.quantidade>0;return '<tr><td>'+esc(h.descricao||h.tipo)+'</td><td style="color:'+(pos?'#1f9d57':'#e0575b')+'">'+(pos?'+':'')+h.quantidade+'</td><td>'+h.saldo_apos+'</td><td style="color:#5b6b82">'+esc(h.criado_em||'')+'</td></tr>';}).join('')+'</tbody></table>';
+}
+function ring2(saldo,usados){var tot=saldo+usados||1;var pct=Math.round(saldo/tot*100);var r=64,c=2*Math.PI*r;
+ return '<div class="ringwrap"><svg viewBox="0 0 160 160" class="ringsvg"><circle cx="80" cy="80" r="'+r+'" fill="none" stroke="#e6edf7" stroke-width="14"/>'+
+  '<circle class="ringp" cx="80" cy="80" r="'+r+'" fill="none" stroke="#1e5eff" stroke-width="14" stroke-linecap="round" stroke-dasharray="'+c+'" stroke-dashoffset="'+(c*(1-pct/100))+'"/></svg>'+
+  '<div class="ringtxt"><b>'+saldo+'</b><span>creditos</span></div></div>';}
+function comprar(id){
+ toast('Gerando seu Pix...',true);
+ fetch('/api/recarga/comprar?pacote='+id).then(function(r){return r.json();}).then(function(d){
+  if(!d.pix){toast('Erro ao gerar Pix.',false);return;}
+  var m=document.getElementById('modal');
+  document.getElementById('modalbody').innerHTML='<div class="mh"><b>Pagar recarga — '+d.pacote.creditos+' creditos</b><span class="x" onclick="fecharRec()">&times;</span></div>'+
+   '<div style="padding:18px"><div style="font-size:22px;font-weight:800;color:var(--navy);text-align:center">'+money(d.pacote.valor_cents/100)+'</div>'+
+   '<div class="hint" style="text-align:center;margin:4px 0 12px">Pix copia e cola:</div>'+
+   '<div style="background:#f6f8fc;border:1px solid var(--line);border-radius:10px;padding:10px;font-size:10px;word-break:break-all">'+esc(d.pix.copiaCola)+'</div>'+
+   '<button class="btns" style="width:100%;margin-top:10px" onclick="copiar(\\''+d.pix.id+'\\',this)">Copiar codigo</button>'+
+   '<button class="btnp" style="width:100%;margin-top:8px" onclick="confirmarRec(\\''+d.pix.id+'\\')">Ja paguei — confirmar</button>'+
+   '<div class="hint" style="text-align:center;margin-top:8px">Na operacao real, a confirmacao e automatica pelo banco (webhook).</div></div>';
+  window._pixcc=d.pix.copiaCola; m.classList.add('on');
+ }).catch(function(){toast('Recarga so funciona no servidor.',false);});
+}
+function copiar(id,btn){try{navigator.clipboard.writeText(window._pixcc||'');btn.textContent='Copiado!';}catch(e){}}
+function confirmarRec(pix){
+ fetch('/api/recarga/confirmar?pix='+encodeURIComponent(pix)).then(function(r){return r.json();}).then(function(d){
+  fecharRec();
+  if(d.ok){toast('Recarga confirmada! +'+(d.creditos||0)+' creditos',true);rRecarga();}
+  else toast('Nao foi possivel confirmar.',false);
+ }).catch(function(){toast('Erro.',false);});
+}
+function fecharRec(){document.getElementById('modal').classList.remove('on');}
+
 /* CONVERSA (modal) */
 function conversa(id){var d=byId(id);var m=document.getElementById('modal');
  var msgs=d.mensagens||[],first=true;
@@ -268,7 +333,8 @@ document.addEventListener('DOMContentLoaded',function(){bg();paint();});
 
 export function paginaClienteHTML(dados, clienteNome = 'Comercio Demonstracao LTDA') {
   const nav = [
-    ['visao', '&#8962;', 'Visao Geral'], ['enviar', '&#10133;', 'Enviar Devedor'],
+    ['visao', '&#8962;', 'Visao Geral'], ['recarga', '&#128179;', 'Recarga de Creditos'],
+    ['enviar', '&#10133;', 'Enviar Devedor'],
     ['meus', '&#128101;', 'Meus Devedores'], ['validar', '&#9989;', 'Validar Pagamentos'],
     ['spc', '&#127991;', 'SPC / Serasa'], ['parcelas', '&#128197;', 'Parcelamentos'],
     ['relatorios', '&#128202;', 'Relatorios'],
@@ -298,10 +364,10 @@ export function paginaClienteHTML(dados, clienteNome = 'Comercio Demonstracao LT
   </div>
   <nav class="bottomnav">
     <a data-nav="visao" class="active" onclick="go('visao')"><span class="ic">&#8962;</span>Visao</a>
+    <a data-nav="recarga" onclick="go('recarga')"><span class="ic">&#128179;</span>Recarga</a>
     <a data-nav="enviar" onclick="go('enviar')"><span class="ic">&#10133;</span>Enviar</a>
     <a data-nav="meus" onclick="go('meus')"><span class="ic">&#128101;</span>Devedores</a>
     <a data-nav="validar" onclick="go('validar')"><span class="ic">&#9989;</span>Validar</a>
-    <a data-nav="spc" onclick="go('spc')"><span class="ic">&#127991;</span>SPC</a>
   </nav>
 </div>
 <div class="modal" id="modal"><div class="modalbox" id="modalbody"></div></div>
