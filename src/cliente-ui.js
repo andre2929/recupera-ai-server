@@ -510,10 +510,16 @@ function agQuick(q){var i=document.getElementById('tmsg');i.value=q;agTestar();}
 function agTestar(){var i=document.getElementById('tmsg');var msg=(i.value||'').trim();if(!msg)return;i.value='';
  var box=document.getElementById('tchat');
  box.innerHTML+='<div class="tb u">'+esc(msg)+'</div>';
- var r=agResponder(msg);
- box.innerHTML+='<div class="tb a">'+r+'</div>';
- box.scrollTop=box.scrollHeight;
  var pb=document.getElementById('promptbox');if(pb)pb.textContent=agPrompt();
+ var wait='<div class="tb a" id="_agwait" style="opacity:.6">digitando&hellip;</div>';
+ box.innerHTML+=wait;box.scrollTop=box.scrollHeight;
+ function mostra(txt,tag){var w=document.getElementById('_agwait');if(w)w.remove();
+  box.innerHTML+='<div class="tb a">'+txt+(tag?' <span style="font-size:9px;color:#12a150;font-weight:700">'+tag+'</span>':'')+'</div>';box.scrollTop=box.scrollHeight;}
+ try{fetch('/api/agente/testar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:agPrompt(),mensagem:msg})})
+  .then(function(r){return r.ok?r.json():null;})
+  .then(function(d){if(d&&d.resposta&&!d.semIA)mostra(esc(d.resposta),'&#9889; '+(d.provedor||'IA'));else mostra(agResponder(msg),'roteiro');})
+  .catch(function(){mostra(agResponder(msg),'roteiro');});
+ }catch(e){mostra(agResponder(msg),'roteiro');}
 }
 function agResponder(msg){
  var t=msg.toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g,'');

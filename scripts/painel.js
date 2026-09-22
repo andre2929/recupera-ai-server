@@ -12,6 +12,7 @@ import { PACOTES, criarRecarga, confirmarRecarga } from '../src/recarga.js';
 import { saldo as credSaldo, usados as credUsados, historico as credHist } from '../src/creditos.js';
 import { lojistas, auditar, listaAuditoria, zerarBase, recargasPagas, resumoGestor, aprendizado, salvarAgente, lerAgente } from '../src/db.js';
 import { paginaGestorHTML } from '../src/gestor-ui.js';
+import { conversar, iaAtiva, provedorIA } from '../src/llm.js';
 import { readFileSync } from 'node:fs';
 import { resolve as rpath, dirname as rdir } from 'node:path';
 import { fileURLToPath as rfurl } from 'node:url';
@@ -69,6 +70,18 @@ createServer(async (req, res) => {
       res.writeHead(200, { 'content-type': 'application/json', 'cache-control': 'no-store' });
       res.end(JSON.stringify(r));
     } catch (e) { res.writeHead(500, { 'content-type': 'application/json' }); res.end(JSON.stringify({ erro: e.message })); }
+    return;
+  }
+  // --- teste do Agente IA (usa IA free se houver chave, senao devolve semIA) ---
+  if (req.url.startsWith('/api/agente/testar')) {
+    try {
+      let body = '';
+      for await (const c of req) body += c;
+      const { prompt = '', mensagem = '' } = JSON.parse(body || '{}');
+      const resposta = iaAtiva ? await conversar(prompt, `Mensagem do devedor: "${mensagem}"`, { maxTokens: 300 }) : null;
+      res.writeHead(200, { 'content-type': 'application/json', 'cache-control': 'no-store' });
+      res.end(JSON.stringify({ resposta, provedor: provedorIA, semIA: !iaAtiva || !resposta }));
+    } catch (e) { res.writeHead(500, { 'content-type': 'application/json' }); res.end(JSON.stringify({ erro: e.message, semIA: true })); }
     return;
   }
   // --- config do Agente IA ---
