@@ -51,6 +51,33 @@ const CSS_CLI = `
 .dstat .v.g{color:var(--verde)}.dstat .v.a{color:#d98b0e}
 .dstat .l{font-size:11.5px;color:var(--muted);margin-top:2px}
 @media(max-width:620px){.destaque{grid-template-columns:1fr;justify-items:center;text-align:center}.dstats{width:100%}}
+/* ===== Conversa estilo WhatsApp ===== */
+.modalbox.wamodal{width:min(460px,96vw);height:min(86vh,760px);background:#efeae2}
+.wa{display:flex;flex-direction:column;height:100%}
+.wa .wahead{display:flex;align-items:center;gap:10px;padding:9px 12px;background:#008069;color:#fff;flex:0 0 auto}
+.wa .wahead .bk{font-size:20px;line-height:1;cursor:pointer;opacity:.95}
+.wa .wahead .av{width:38px;height:38px;border-radius:50%;background:#0a7d69;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;flex:0 0 auto;overflow:hidden}
+.wa .wahead .nm{line-height:1.25;min-width:0}
+.wa .wahead .nm b{font-size:15px;font-weight:600;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wa .wahead .nm span{font-size:12px;opacity:.85}
+.wa .wahead .x{margin-left:auto;font-size:22px;color:#fff;cursor:pointer;opacity:.9;line-height:1}
+.wa .wabody{flex:1;overflow:auto;padding:14px 7% 22px;background-color:#efeae2;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Cg fill='none' stroke='%23d8cfc4' stroke-width='1.1' opacity='.55'%3E%3Ccircle cx='14' cy='14' r='4'/%3E%3Cpath d='M40 8l6 6-6 6-6-6z'/%3E%3Cpath d='M48 40h10M53 35v10'/%3E%3Cpath d='M8 44c4-4 8 0 12-4'/%3E%3C/g%3E%3C/svg%3E")}
+.wa .wday{text-align:center;margin:2px 0 12px}
+.wa .wday span{background:#e2f0e1;color:#54656f;font-size:11px;padding:5px 12px;border-radius:8px;box-shadow:0 1px .5px rgba(0,0,0,.1)}
+.wa .wrow{display:flex;margin-bottom:5px}
+.wa .wrow.out{justify-content:flex-end}
+.wa .wb{position:relative;max-width:78%;padding:6px 9px 8px;border-radius:8px;font-size:13.6px;line-height:1.42;color:#111b21;box-shadow:0 1px .5px rgba(0,0,0,.13);white-space:pre-wrap;word-break:break-word}
+.wa .wrow.out .wb{background:#d9fdd3;border-top-right-radius:0}
+.wa .wrow.in .wb{background:#fff;border-top-left-radius:0}
+.wa .wrow.out .wb::after{content:"";position:absolute;top:0;right:-8px;border:8px solid transparent;border-top-color:#d9fdd3;border-right-width:0}
+.wa .wrow.in .wb::after{content:"";position:absolute;top:0;left:-8px;border:8px solid transparent;border-top-color:#fff;border-left-width:0}
+.wa .wb .tm{float:right;font-size:10.5px;color:#667781;margin:8px -2px -3px 10px;line-height:1}
+.wa .wb .ck{color:#53bdeb;margin-left:1px;letter-spacing:-3px}
+.wa .wvoz{display:flex;align-items:center;gap:8px;min-width:170px}
+.wa .wvoz .pl{width:32px;height:32px;border-radius:50%;background:#008069;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;flex:0 0 auto;cursor:pointer}
+.wa .wvoz .wave{flex:1;display:flex;align-items:center;gap:2px;height:20px}
+.wa .wvoz .wave i{flex:1;background:#9fc7ad;border-radius:2px;height:30%}
+.wa .wvoz .dur{font-size:11px;color:#667781}
 `;
 
 const CLIENTE = `
@@ -285,6 +312,7 @@ function comprar(id){
  fetch('/api/recarga/comprar?pacote='+id).then(function(r){return r.json();}).then(function(d){
   if(!d.pix){toast('Erro ao gerar Pix.',false);return;}
   var m=document.getElementById('modal');
+  document.getElementById('modalbody').classList.remove('wamodal');
   document.getElementById('modalbody').innerHTML='<div class="mh"><b>Pagar recarga — '+d.pacote.creditos+' creditos</b><span class="x" onclick="fecharRec()">&times;</span></div>'+
    '<div style="padding:18px"><div style="font-size:22px;font-weight:800;color:var(--navy);text-align:center">'+money(d.pacote.valor_cents/100)+'</div>'+
    '<div class="hint" style="text-align:center;margin:4px 0 12px">Pix copia e cola:</div>'+
@@ -307,15 +335,27 @@ function fecharRec(){document.getElementById('modal').classList.remove('on');}
 
 /* CONVERSA (modal) */
 function conversa(id){var d=byId(id);var m=document.getElementById('modal');
- var msgs=d.mensagens||[],first=true;
- var corpo=msgs.length?msgs.map(function(x){var au=false;if(x.direcao==='saida'&&first){au=true;first=false;}
-  if(au)return '<div class="msg saida"><div class="h">RECUPERA.AI &#129302; &middot; audio</div><div class="voz"><button class="play">&#9654;</button><div class="wave">'+wave()+'</div><span class="dur">&#128266; voz</span></div></div>';
-  return '<div class="msg '+x.direcao+'"><div class="h">'+(x.direcao==='saida'?'RECUPERA.AI &#129302;':esc(d.nome.split(' ')[0]))+'</div>'+esc(x.texto)+'</div>';}).join(''):'<div class="emptybox">Sem conversa registrada ainda.</div>';
- document.getElementById('modalbody').innerHTML='<div class="mh"><div class="chead"><div class="av" style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#1f9d57,#00b389);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700">'+d.nome.charAt(0)+'</div></div><div><b>'+esc(d.nome)+'</b><br><span style="font-size:11.5px;color:#5b6b82">'+money(valorDe(d))+' &middot; '+esc(d.credor||'')+'</span></div><span class="x" onclick="fechar()">&times;</span></div><div class="chat" style="max-height:60vh">'+corpo+'</div>';
+ var msgs=d.mensagens||[],first=true,hh=9,mm=2;
+ function hora(){mm++;if(mm>59){mm=0;hh++;}return (hh<10?'0':'')+hh+':'+(mm<10?'0':'')+mm;}
+ var corpo=msgs.length?msgs.map(function(x){
+  var out=x.direcao==='saida',t=hora();
+  var au=false;if(out&&first){au=true;first=false;}
+  var meta='<span class="tm">'+t+(out?' <span class="ck">&#10003;&#10003;</span>':'')+'</span>';
+  if(au)return '<div class="wrow out"><div class="wb"><div class="wvoz"><span class="pl">&#9654;</span><div class="wave">'+wave()+'</div><span class="dur">0:12</span></div>'+meta+'</div></div>';
+  return '<div class="wrow '+(out?'out':'in')+'"><div class="wb">'+esc(x.texto)+meta+'</div></div>';
+ }).join(''):'<div class="wrow in"><div class="wb">Sem conversa registrada ainda.<span class="tm">'+hora()+'</span></div></div>';
+ var ini=d.nome.trim().charAt(0).toUpperCase()||'?';
+ document.getElementById('modalbody').innerHTML=
+  '<div class="wa"><div class="wahead"><span class="bk" onclick="fechar()">&#8592;</span>'+
+  '<div class="av">'+ini+'</div>'+
+  '<div class="nm"><b>'+esc(d.nome)+'</b><span>online</span></div>'+
+  '<span class="x" onclick="fechar()">&times;</span></div>'+
+  '<div class="wabody"><div class="wday"><span>HOJE</span></div>'+corpo+'</div></div>';
  m.classList.add('on');
+ document.querySelector('#modal .modalbox').classList.add('wamodal');
 }
 function wave(){var b='';for(var i=0;i<20;i++)b+='<i style="height:'+(20+Math.round(Math.abs(Math.sin(i*1.3))*70))+'%"></i>';return b;}
-function fechar(){document.getElementById('modal').classList.remove('on');}
+function fechar(){document.getElementById('modal').classList.remove('on');document.getElementById('modalbody').classList.remove('wamodal');}
 
 /* TOAST */
 var _tt;
