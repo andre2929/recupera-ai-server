@@ -10,7 +10,7 @@ import { gerarVoz } from '../src/voz.js';
 import * as wa from '../src/wa-manager.js';
 import { PACOTES, criarRecarga, confirmarRecarga } from '../src/recarga.js';
 import { saldo as credSaldo, usados as credUsados, historico as credHist } from '../src/creditos.js';
-import { lojistas, auditar, listaAuditoria, zerarBase, recargasPagas, resumoGestor, aprendizado } from '../src/db.js';
+import { lojistas, auditar, listaAuditoria, zerarBase, recargasPagas, resumoGestor, aprendizado, salvarAgente, lerAgente } from '../src/db.js';
 import { paginaGestorHTML } from '../src/gestor-ui.js';
 import { readFileSync } from 'node:fs';
 import { resolve as rpath, dirname as rdir } from 'node:path';
@@ -68,6 +68,23 @@ createServer(async (req, res) => {
       else r = { erro: 'acao invalida' };
       res.writeHead(200, { 'content-type': 'application/json', 'cache-control': 'no-store' });
       res.end(JSON.stringify(r));
+    } catch (e) { res.writeHead(500, { 'content-type': 'application/json' }); res.end(JSON.stringify({ erro: e.message })); }
+    return;
+  }
+  // --- config do Agente IA ---
+  if (req.url.startsWith('/api/agente')) {
+    try {
+      if (req.method === 'POST') {
+        let body = '';
+        for await (const c of req) body += c;
+        const cfg = JSON.parse(body || '{}');
+        salvarAgente(cfg, 1);
+        res.writeHead(200, { 'content-type': 'application/json', 'cache-control': 'no-store' });
+        res.end(JSON.stringify({ ok: true }));
+      } else {
+        res.writeHead(200, { 'content-type': 'application/json', 'cache-control': 'no-store' });
+        res.end(JSON.stringify(lerAgente(1) || {}));
+      }
     } catch (e) { res.writeHead(500, { 'content-type': 'application/json' }); res.end(JSON.stringify({ erro: e.message })); }
     return;
   }

@@ -78,6 +78,61 @@ const CSS_CLI = `
 .wa .wvoz .wave{flex:1;display:flex;align-items:center;gap:2px;height:20px}
 .wa .wvoz .wave i{flex:1;background:#9fc7ad;border-radius:2px;height:30%}
 .wa .wvoz .dur{font-size:11px;color:#667781}
+/* ===== Agente IA (config) ===== */
+.ag{display:grid;grid-template-columns:1fr 340px;gap:16px;align-items:start}
+@media(max-width:980px){.ag{grid-template-columns:1fr}}
+.agcol{display:flex;flex-direction:column;gap:16px}
+.agc{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 18px 20px;box-shadow:var(--sombra)}
+.agc h3{font-size:14.5px;color:var(--navy);display:flex;align-items:center;gap:8px;margin:0 0 4px}
+.agc h3 .e{color:#12a150}
+.agc .sub{font-size:12px;color:var(--muted);margin:0 0 14px}
+.agrow{padding:9px 0;border-bottom:1px solid var(--line)}
+.agrow:last-child{border-bottom:none}
+.agrow .k{font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:#12a150;font-weight:800;margin-bottom:3px}
+.agrow input,.agrow textarea,.agrow select{width:100%;border:1px solid var(--line);border-radius:9px;padding:8px 10px;font-size:13px;font-family:inherit;outline:none;color:var(--navy);background:#fbfdfb}
+.agrow textarea{resize:vertical;min-height:44px;line-height:1.4}
+.agrow input:focus,.agrow textarea:focus,.agrow select:focus{border-color:#12a150;box-shadow:0 0 0 3px #12a15020}
+.presets{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:4px}
+@media(max-width:560px){.presets{grid-template-columns:repeat(2,1fr)}}
+.pcard{border:1.5px solid var(--line);border-radius:12px;padding:12px 10px;cursor:pointer;text-align:center;transition:.15s;background:#fff}
+.pcard:hover{border-color:#8fd6b0}
+.pcard.on{border-color:#12a150;background:#eafaf1}
+.pcard .pi{font-size:20px}
+.pcard b{display:block;font-size:12.5px;color:var(--navy);margin-top:3px}
+.pcard span{font-size:10.5px;color:var(--muted);line-height:1.25;display:block;margin-top:2px}
+.foco{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:4px}
+.slrow{display:grid;grid-template-columns:1fr 46px;gap:10px;align-items:center;padding:8px 0}
+.slrow label{font-size:12px;color:var(--navy);font-weight:600}
+.slrow .sv{font-size:13px;font-weight:800;color:#12a150;text-align:right}
+.slrow input[type=range]{grid-column:1/-1;width:100%;accent-color:#12a150}
+.tggs{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tgg{display:flex;align-items:center;justify-content:space-between;gap:8px;border:1px solid var(--line);border-radius:10px;padding:9px 12px;font-size:12.5px;color:var(--navy);font-weight:600}
+.sw{position:relative;width:40px;height:22px;flex:0 0 auto;border-radius:100px;background:#cfd8d3;cursor:pointer;transition:.2s}
+.sw.on{background:#12a150}
+.sw::after{content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.sw.on::after{left:20px}
+.tempos{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:4px}
+.tcard{border:1.5px solid var(--line);border-radius:10px;padding:10px 4px;text-align:center;cursor:pointer;transition:.15s;background:#fff}
+.tcard.on{border-color:#12a150;background:#eafaf1}
+.tcard b{font-size:14px;color:var(--navy)}
+.tcard span{display:block;font-size:10px;color:var(--muted);margin-top:1px}
+.agsave{background:#12a150;color:#fff;border-radius:10px;padding:9px 18px;font-weight:700;font-size:13.5px}
+.agsave:active{transform:scale(.97)}
+.agside .test{background:linear-gradient(180deg,#f4fbf6,#fff)}
+.tchat{background:#efeae2;border-radius:12px;padding:12px 10px;min-height:150px;max-height:300px;overflow:auto;display:flex;flex-direction:column;gap:6px}
+.tchat .tb{max-width:85%;padding:7px 10px;border-radius:9px;font-size:12.8px;line-height:1.42;white-space:pre-wrap;box-shadow:0 1px .5px rgba(0,0,0,.12)}
+.tchat .tb.u{align-self:flex-end;background:#d9fdd3;border-top-right-radius:2px}
+.tchat .tb.a{align-self:flex-start;background:#fff;border-top-left-radius:2px}
+.tin{display:flex;gap:8px;margin-top:10px}
+.tin input{flex:1;border:1px solid var(--line);border-radius:100px;padding:9px 14px;font-size:13px;outline:none}
+.tin input:focus{border-color:#12a150}
+.tin button{width:40px;height:40px;border-radius:50%;background:#12a150;color:#fff;font-size:15px;flex:0 0 auto}
+.promptbox{background:#0f1b17;color:#c9f0d8;border-radius:10px;padding:12px;font-size:11px;line-height:1.5;white-space:pre-wrap;word-break:break-word;max-height:320px;overflow:auto;font-family:ui-monospace,Menlo,Consolas,monospace}
+.agacc{border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.agacc>summary{list-style:none;cursor:pointer;padding:12px 14px;font-size:13px;font-weight:700;color:var(--navy);display:flex;align-items:center;gap:8px;background:#f6faf7}
+.agacc>summary::-webkit-details-marker{display:none}
+.agacc[open]>summary{border-bottom:1px solid var(--line)}
+.agacc .in{padding:14px}
 `;
 
 const CLIENTE = `
@@ -110,7 +165,7 @@ function go(v){VIEW=v;paint();window.scrollTo(0,0);}
 function paint(){
  document.querySelectorAll('[data-nav]').forEach(function(a){a.classList.toggle('active',a.getAttribute('data-nav')===VIEW);});
  document.querySelectorAll('section[data-view]').forEach(function(s){s.hidden=s.getAttribute('data-view')!==VIEW;});
- ({visao:rVisao,recarga:rRecarga,enviar:rEnviar,meus:rMeus,validar:rValidar,spc:rSpc,parcelas:rParcelas,relatorios:rRel}[VIEW]||function(){})();
+ ({visao:rVisao,agente:rAgente,recarga:rRecarga,enviar:rEnviar,meus:rMeus,validar:rValidar,spc:rSpc,parcelas:rParcelas,relatorios:rRel}[VIEW]||function(){})();
 }
 function kpi(n,l,cls){return '<div class="kpi"><div class="ki '+(cls||'b1')+'">'+'</div><div><div class="n">'+n+'</div><div class="l">'+l+'</div></div></div>';}
 
@@ -357,6 +412,156 @@ function conversa(id){var d=byId(id);var m=document.getElementById('modal');
 function wave(){var b='';for(var i=0;i<20;i++)b+='<i style="height:'+(20+Math.round(Math.abs(Math.sin(i*1.3))*70))+'%"></i>';return b;}
 function fechar(){document.getElementById('modal').classList.remove('on');document.getElementById('modalbody').classList.remove('wamodal');}
 
+/* ================= AGENTE IA (config do agente de cobranca) ================= */
+var AG_DEF={
+ empresa:(typeof CLIENTE_NOME!=='undefined'?CLIENTE_NOME:'CDL Campo Grande'),
+ segmento:'Varejo / comercio — lojistas associados',
+ regiao:'Campo Grande/MS — seg a sex 8h-18h, sab 8h-12h',
+ sobre:'Central de cobranca amigavel dos lojistas associados a CDL. Recupera dividas de forma respeitosa, dentro da LGPD e do Codigo de Defesa do Consumidor.',
+ cobra:'Dividas de crediario, cheques, carnes e mensalidades em atraso dos lojistas associados.',
+ vende:'1) Cumprimenta pelo nome com respeito. 2) Confirma a divida e o valor. 3) Oferece condicao (a vista com desconto ou parcelado). 4) Gera o Pix na hora. 5) Recebe o comprovante e da baixa.',
+ pode:'Negociar, oferecer desconto a vista, parcelar, gerar Pix, confirmar pagamento por comprovante e iniciar a baixa no SPC/Serasa.',
+ naopode:'Ameacar, constranger, expor a divida a terceiros, cobrar fora do horario ou divida prescrita, prometer o que nao pode ou mentir. Se perguntarem direto se e um robo, responde com honestidade.',
+ preset:'amigavel', foco:'hibrido',
+ tom:70, formal:50, firmeza:45, proativ:65,
+ tamanho:'curtas', emojis:'moderado', velocidade:'humana', idioma:'pt-BR',
+ proibidas:'calote, caloteiro, vagabundo, barato, milagre, garantido',
+ tEspera:'10', descMax:15, parcMax:6, pausar:'/pausar', despausar:'/despausar',
+ tg:{partes:true,nome:true,umapergunta:true,voz:true,assinar:false}
+};
+var AG=carregarAG();
+function carregarAG(){try{var s=JSON.parse(localStorage.getItem('recupera_agente_cfg')||'null');if(s){var o=JSON.parse(JSON.stringify(AG_DEF));for(var k in s)o[k]=s[k];o.tg=Object.assign({},AG_DEF.tg,s.tg||{});return o;}}catch(e){}return JSON.parse(JSON.stringify(AG_DEF));}
+function salvarAG(){try{localStorage.setItem('recupera_agente_cfg',JSON.stringify(AG));}catch(e){}
+ try{fetch('/api/agente/save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(AG)}).catch(function(){});}catch(e){}
+ toast('Agente salvo! A IA ja vai atender com essa configuracao.',true);}
+var PRESETS=[
+ ['padrao','&#129309;','Padrao','Equilibrado e profissional',{tom:60,formal:55,firmeza:45}],
+ ['serio','&#127913;','Serio','Objetivo e formal',{tom:40,formal:75,firmeza:60}],
+ ['amigavel','&#129366;','Amigavel','Acolhedor e proximo',{tom:75,formal:45,firmeza:40}],
+ ['firme','&#128170;','Firme','Cordial mas incisivo',{tom:50,formal:55,firmeza:75}],
+ ['consultivo','&#129504;','Consultivo','Explica e orienta',{tom:60,formal:60,firmeza:45}],
+ ['empatico','&#129505;','Empatico','Compreensivo, sem pressao',{tom:80,formal:45,firmeza:30}]
+];
+var FOCOS=[['recuperar','&#127919;','Recuperar','Negocia e fecha'],['suporte','&#128736;','Suporte','Tira duvidas'],['hibrido','&#128256;','Hibrido','Faz os dois']];
+var TEMPOS=[['3','Instantaneo'],['5','Rapido'],['10','Humano'],['20','Pensativo'],['30','Calmo']];
+function agSel(id,v){AG[id]=v;rAgente();}
+function agSet(id,v){AG[id]=v;}
+function agSlider(id,v){AG[id]=+v;var el=document.getElementById('sv_'+id);if(el)el.textContent=v;}
+function agTgl(k){AG.tg[k]=!AG.tg[k];var el=document.getElementById('tg_'+k);if(el)el.classList.toggle('on',AG.tg[k]);}
+function agPreset(p){AG.preset=p;var pr=PRESETS.filter(function(x){return x[0]===p;})[0];if(pr){AG.tom=pr[4].tom;AG.formal=pr[4].formal;AG.firmeza=pr[4].firmeza;}rAgente();}
+function tgl(k,lbl){return '<div class="tgg"><span>'+lbl+'</span><div id="tg_'+k+'" class="sw'+(AG.tg[k]?' on':'')+'" onclick="agTgl(\\''+k+'\\')"></div></div>';}
+function sl(id,lbl){return '<div class="slrow"><label>'+lbl+'</label><span class="sv" id="sv_'+id+'">'+AG[id]+'</span><input type="range" min="0" max="100" value="'+AG[id]+'" oninput="agSlider(\\''+id+'\\',this.value)"></div>';}
+function inp(id,lbl,ta){var v=esc(AG[id]);return '<div class="agrow"><div class="k">'+lbl+'</div>'+(ta?'<textarea oninput="agSet(\\''+id+'\\',this.value)">'+v+'</textarea>':'<input value="'+v+'" oninput="agSet(\\''+id+'\\',this.value)">')+'</div>';}
+function selct(id,lbl,opts){return '<div class="agrow"><div class="k">'+lbl+'</div><select onchange="agSet(\\''+id+'\\',this.value)">'+opts.map(function(o){return '<option'+(AG[id]===o?' selected':'')+'>'+o+'</option>';}).join('')+'</select></div>';}
+
+function rAgente(){
+ var sec=document.getElementById('v-agente');if(!sec)return;
+ var presetsH=PRESETS.map(function(p){return '<div class="pcard'+(AG.preset===p[0]?' on':'')+'" onclick="agPreset(\\''+p[0]+'\\')"><div class="pi">'+p[1]+'</div><b>'+p[2]+'</b><span>'+p[3]+'</span></div>';}).join('');
+ var focoH=FOCOS.map(function(f){return '<div class="pcard'+(AG.foco===f[0]?' on':'')+'" onclick="agSel(\\'foco\\',\\''+f[0]+'\\')"><div class="pi">'+f[1]+'</div><b>'+f[2]+'</b><span>'+f[3]+'</span></div>';}).join('');
+ var tempoH=TEMPOS.map(function(t){return '<div class="tcard'+(AG.tEspera===t[0]?' on':'')+'" onclick="agSel(\\'tEspera\\',\\''+t[0]+'\\')"><b>'+t[0]+'s</b><span>'+t[1]+'</span></div>';}).join('');
+ sec.innerHTML=''+
+ '<div class="banner"><div class="bot" style="cursor:default">'+(ROBO_IMG?'<div class="mascote">'+ROBO_M+'<span class="lid"></span></div>':ROBO_M)+'</div>'+
+  '<div><h2>Agente IA &mdash; ensine sua cobranca</h2><p>Configure o que a IA sabe do seu negocio e como ela fala. Ela atende no WhatsApp, negocia, gera o Pix e da baixa &mdash; 100% no automatico.</p></div>'+
+  '<button class="agsave" style="align-self:center" onclick="salvarAG()">Salvar</button></div>'+
+ '<div class="ag"><div class="agcol">'+
+  /* O QUE A IA APRENDEU */
+  '<div class="agc"><h3><span class="e">&#10022;</span> O que a IA aprendeu</h3><p class="sub">Quanto mais completo, melhor ela negocia.</p>'+
+   inp('empresa','Empresa / credor')+inp('segmento','Segmento')+inp('regiao','Regiao / horario')+
+   inp('sobre','Sobre',1)+inp('cobra','O que cobra',1)+inp('vende','Como negocia',1)+
+   inp('pode','Pode fazer',1)+inp('naopode','Nao pode fazer',1)+
+  '</div>'+
+  /* PERSONALIDADE */
+  '<div class="agc"><h3><span class="e">&#10022;</span> Personalidade do agente</h3><p class="sub">Presets ajustam os controles abaixo.</p>'+
+   '<div class="presets">'+presetsH+'</div>'+
+   '<div style="font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:#12a150;font-weight:800;margin:16px 0 6px">Foco do atendimento</div><div class="foco">'+focoH+'</div>'+
+   '<div style="margin-top:14px">'+sl('tom','Tom (0=serio &rarr; 100=caloroso)')+sl('formal','Formalidade')+sl('firmeza','Firmeza na cobranca')+sl('proativ','Proatividade')+'</div>'+
+   '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px">'+
+    selct('tamanho','Tamanho',['curtas','medias','longas'])+selct('emojis','Emojis',['nenhum','moderado','muitos'])+
+    selct('velocidade','Velocidade',['instantanea','humana','calma'])+selct('idioma','Idioma',['pt-BR'])+
+   '</div>'+
+   inp('proibidas','Palavras proibidas')+
+   '<div class="tggs" style="margin-top:12px">'+tgl('partes','Responder em partes')+tgl('nome','Chamar pelo nome')+tgl('umapergunta','Uma pergunta por vez')+tgl('voz','Enviar voz')+tgl('assinar','Assinar mensagens')+'</div>'+
+  '</div>'+
+  /* TEMPO DE ESPERA */
+  '<div class="agc"><h3><span class="e">&#10022;</span> Tempo de espera (entender contexto)</h3><p class="sub">A IA aguarda esse tempo antes de responder. Se o cliente manda varias mensagens seguidas, ela junta tudo e responde de uma vez &mdash; como uma pessoa real.</p>'+
+   '<div class="tempos">'+tempoH+'</div></div>'+
+  /* AJUSTES FINOS */
+  '<div class="agc"><h3><span class="e">&#10022;</span> Ajustes finos da negociacao</h3>'+
+   '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">'+
+    '<div class="agrow"><div class="k">Desconto max. a vista (%)</div><input type="number" min="0" max="90" value="'+AG.descMax+'" oninput="agSet(\\'descMax\\',+this.value)"></div>'+
+    '<div class="agrow"><div class="k">Parcelamento max. (x)</div><input type="number" min="1" max="24" value="'+AG.parcMax+'" oninput="agSet(\\'parcMax\\',+this.value)"></div>'+
+    '<div class="agrow"><div class="k">Palavra p/ pausar IA</div><input value="'+esc(AG.pausar)+'" oninput="agSet(\\'pausar\\',this.value)"></div>'+
+    '<div class="agrow"><div class="k">Palavra p/ despausar</div><input value="'+esc(AG.despausar)+'" oninput="agSet(\\'despausar\\',this.value)"></div>'+
+   '</div></div>'+
+ '</div>'+
+ /* COLUNA LATERAL: TESTAR + PROMPT */
+ '<div class="agcol agside">'+
+  '<div class="agc test"><h3><span class="e">&#10022;</span> Testar resposta</h3><p class="sub">Previa de como a IA responde com essa config (roteiro deterministico).</p>'+
+   '<div class="tchat" id="tchat"><div class="tb a">Oi! Sou o agente da '+esc(AG.empresa)+'. Me manda uma mensagem como se fosse o devedor pra ver como eu respondo. &#128522;</div></div>'+
+   '<div class="tin"><input id="tmsg" placeholder="Ex: ta caro, tem desconto?" onkeydown="if(event.key===\\'Enter\\')agTestar()"><button onclick="agTestar()">&#10148;</button></div>'+
+   '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">'+
+    ['oi','ta caro, tem desconto?','so consigo parcelar','pode gerar o pix','ja paguei, segue o comprovante','voce e um robo?'].map(function(q){return '<button class="btns" style="font-size:11px;padding:6px 10px" onclick="agQuick(\\''+q.replace(/\\'/g,"")+'\\')">'+q+'</button>';}).join('')+
+   '</div></div>'+
+  '<details class="agacc"><summary>&#128220; Ver prompt gerado</summary><div class="in"><div class="promptbox" id="promptbox">'+esc(agPrompt())+'</div>'+
+   '<button class="btns" style="width:100%;margin-top:10px" onclick="agCopiarPrompt()">Copiar prompt</button></div></details>'+
+ '</div></div>';
+}
+function agQuick(q){var i=document.getElementById('tmsg');i.value=q;agTestar();}
+function agTestar(){var i=document.getElementById('tmsg');var msg=(i.value||'').trim();if(!msg)return;i.value='';
+ var box=document.getElementById('tchat');
+ box.innerHTML+='<div class="tb u">'+esc(msg)+'</div>';
+ var r=agResponder(msg);
+ box.innerHTML+='<div class="tb a">'+r+'</div>';
+ box.scrollTop=box.scrollHeight;
+ var pb=document.getElementById('promptbox');if(pb)pb.textContent=agPrompt();
+}
+function agResponder(msg){
+ var t=msg.toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g,'');
+ var emp=esc(AG.empresa);
+ var nome=AG.tg.nome?'Joao':''; var vlr='R$ 340,00';
+ var desc=(340*(1-AG.descMax/100)).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+ var emj=AG.emojis==='nenhum'?'':(AG.emojis==='muitos'?' &#128522;&#128076;':' &#128522;');
+ var ola=AG.tom>=65?'Oi'+(nome?', '+nome:'')+'! Tudo bem?':'Ola'+(nome?', '+nome:'')+'.';
+ var r;
+ if(/robo|rob|voce e|eh um|automat|maquina|humano/.test(t)) r='Sou um assistente digital da '+emp+', sim. Mas pode falar comigo numa boa que eu resolvo tudo por aqui: negocio, gero o Pix e dou baixa.';
+ else if(/oi|ola|bom dia|boa tarde|boa noite|tudo bem/.test(t)) r=ola+' Sou da '+emp+' e vi que tem uma pendencia de '+vlr+' em aberto. Da pra resolver hoje numa condicao boa. Prefere a vista ou parcelado?';
+ else if(/desconto|caro|ta caro|abaixa|diminui/.test(t)) r=(nome?nome+', ':'')+'consigo sim: a vista fecho de '+vlr+' por *R$ '+desc+'* ('+AG.descMax+'% off). Fechando agora ja te mando o Pix. Pode ser?';
+ else if(/parcel|dividir|vezes|nao tenho tudo|so consigo/.test(t)) r='Sem problema! Da pra parcelar em ate '+AG.parcMax+'x. Em quantas vezes fica bom pra voce que eu ja gero a 1a?';
+ else if(/pix|gerar|gera|paga|codigo|copia/.test(t)) r='Perfeito! Ja gero o Pix copia e cola aqui na conversa. Assim que pagar, e so me mandar o comprovante que eu confirmo na hora.';
+ else if(/comprovante|paguei|pago|anexo|print|efetuei/.test(t)) r='Recebi seu comprovante'+(nome?', '+nome:'')+'! &#9989; Vou validar e sua negativacao e baixada em ate 5 dias uteis. Obrigado por resolver com a gente!';
+ else if(/nao devo|nao reconheco|nao e minha|ja paguei isso/.test(t)) r='Entendo. Vou registrar sua contestacao e encaminhar pro financeiro do lojista conferir. Assim que verificarem, te retorno por aqui.';
+ else r='Posso te ajudar a resolver essa pendencia de '+vlr+' agora: fecho a vista com desconto ou parcelo em ate '+AG.parcMax+'x. Qual fica melhor?';
+ if(AG.emojis!=='nenhum'&&!/&#/.test(r))r+=emj;
+ if(AG.tg.assinar)r+='\\n\\n&mdash; '+emp;
+ return r;
+}
+function agPrompt(){
+ var g=AG;var reg=[];
+ if(g.tg.nome)reg.push('chame a pessoa pelo primeiro nome');
+ if(g.tg.umapergunta)reg.push('faca uma pergunta por vez');
+ if(g.tg.partes)reg.push('pode responder em 1-3 mensagens curtas');
+ if(g.tg.voz)reg.push('a abertura pode ir como nota de voz');
+ if(g.tg.assinar)reg.push('assine as mensagens com o nome do credor');
+ return 'Voce e o agente de cobranca da '+g.empresa+' ('+g.segmento+').\\n'+
+  'Atendimento: '+g.regiao+'.\\n'+
+  'Sobre: '+g.sobre+'\\n'+
+  'O que cobra: '+g.cobra+'\\n'+
+  'Como negocia: '+g.vende+'\\n'+
+  'PODE: '+g.pode+'\\n'+
+  'NAO PODE: '+g.naopode+'\\n\\n'+
+  'Personalidade: preset "'+g.preset+'", foco "'+g.foco+'".\\n'+
+  'Tom '+g.tom+'/100, formalidade '+g.formal+'/100, firmeza '+g.firmeza+'/100, proatividade '+g.proativ+'/100.\\n'+
+  'Respostas '+g.tamanho+', emojis '+g.emojis+', velocidade '+g.velocidade+', idioma '+g.idioma+'.\\n'+
+  'NUNCA use as palavras: '+g.proibidas+'.\\n'+
+  'Regras de estilo: '+(reg.join('; ')||'padrao')+'.\\n'+
+  'Limites de negociacao: desconto a vista ate '+g.descMax+'%, parcelamento ate '+g.parcMax+'x.\\n'+
+  'Tempo de espera antes de responder: '+g.tEspera+'s (junte mensagens em sequencia).\\n'+
+  'Voce e 100% autonomo, humanizado e segue a LGPD e o Codigo de Defesa do Consumidor. '+
+  'Se perguntarem diretamente se voce e um robo, responda com honestidade, sem se passar por humano. '+
+  'A decisao de valores, desconto, parcela e gerar Pix segue os limites acima.';
+}
+function agCopiarPrompt(){try{navigator.clipboard.writeText(agPrompt());toast('Prompt copiado.',true);}catch(e){}}
+
 /* TOAST */
 var _tt;
 function toast(msg,ok){var t=document.getElementById('toast');t.className='toast on'+(ok?' ok':'');t.innerHTML=(ok?'&#9989; ':'&#9888; ')+esc(msg);clearTimeout(_tt);_tt=setTimeout(function(){t.className='toast';},3200);}
@@ -399,12 +604,17 @@ function bg(){var c=document.getElementById('tcanvas');if(!c||(window.matchMedia
   for(var g=0;g<4;g++){x.strokeStyle=g%2?'rgba(90,242,192,.16)':'rgba(150,190,255,.2)';x.beginPath();var yy=c.height*(.25+g*.18);x.moveTo(0,yy);for(var xx=0;xx<=c.width;xx+=28)x.lineTo(xx,yy-Math.sin(xx*.012+g+t)*8);x.stroke();}
   P.forEach(function(p){p.x+=p.v*c.width;if(p.x>1.05)p.x=-.05;x.fillStyle='rgba(170,205,255,'+p.a+')';x.beginPath();x.arc(p.x*c.width,p.y*c.height,p.r,0,6.283);x.fill();});
   requestAnimationFrame(loop);}loop();}
-document.addEventListener('DOMContentLoaded',function(){bg();paint();});
+document.addEventListener('DOMContentLoaded',function(){bg();paint();
+ try{fetch('/api/agente').then(function(r){return r.ok?r.json():null;}).then(function(s){
+  if(s&&s.empresa){for(var k in s)AG[k]=s[k];AG.tg=Object.assign({},AG_DEF.tg,s.tg||{});if(VIEW==='agente')rAgente();}
+ }).catch(function(){});}catch(e){}
+});
 `;
 
 export function paginaClienteHTML(dados, clienteNome = 'CDL Campo Grande') {
   const nav = [
-    ['visao', '&#8962;', 'Visao Geral'], ['recarga', '&#128179;', 'Recarga de Creditos'],
+    ['visao', '&#8962;', 'Visao Geral'], ['agente', '&#129302;', 'Agente IA'],
+    ['recarga', '&#128179;', 'Recarga de Creditos'],
     ['enviar', '&#10133;', 'Enviar Devedor'],
     ['meus', '&#128101;', 'Meus Devedores'], ['validar', '&#9989;', 'Validar Pagamentos'],
     ['spc', '&#127991;', 'SPC / Serasa'], ['parcelas', '&#128197;', 'Parcelamentos'],
@@ -435,10 +645,10 @@ export function paginaClienteHTML(dados, clienteNome = 'CDL Campo Grande') {
   </div>
   <nav class="bottomnav">
     <a data-nav="visao" class="active" onclick="go('visao')"><span class="ic">&#8962;</span>Visao</a>
+    <a data-nav="agente" onclick="go('agente')"><span class="ic">&#129302;</span>Agente</a>
     <a data-nav="recarga" onclick="go('recarga')"><span class="ic">&#128179;</span>Recarga</a>
     <a data-nav="enviar" onclick="go('enviar')"><span class="ic">&#10133;</span>Enviar</a>
     <a data-nav="meus" onclick="go('meus')"><span class="ic">&#128101;</span>Devedores</a>
-    <a data-nav="validar" onclick="go('validar')"><span class="ic">&#9989;</span>Validar</a>
   </nav>
 </div>
 <div class="modal" id="modal"><div class="modalbox" id="modalbody"></div></div>

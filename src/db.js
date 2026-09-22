@@ -98,6 +98,11 @@ db.exec(`
     quem       TEXT DEFAULT 'Gestor',
     criado_em  TEXT DEFAULT (datetime('now','localtime'))
   );
+  CREATE TABLE IF NOT EXISTS agente_cfg (
+    lojista_id INTEGER PRIMARY KEY,
+    json       TEXT NOT NULL,
+    atualizado TEXT DEFAULT (datetime('now','localtime'))
+  );
 `);
 
 // seed de lojistas (idempotente): a CDL + exemplos
@@ -112,6 +117,15 @@ if (db.prepare('SELECT COUNT(*) n FROM lojistas').get().n === 0) {
 export const lojistas = () => db.prepare(
   `SELECT l.*, COALESCE((SELECT SUM(quantidade) FROM creditos c WHERE c.lojista_id=l.id),0) creditos
    FROM lojistas l ORDER BY l.id`).all();
+
+// --- config do Agente IA (por lojista) ---
+const _upAg = db.prepare(`INSERT INTO agente_cfg (lojista_id,json,atualizado) VALUES (?,?,datetime('now','localtime'))
+  ON CONFLICT(lojista_id) DO UPDATE SET json=excluded.json, atualizado=excluded.atualizado`);
+export function salvarAgente(cfg, lojista = 1) { _upAg.run(lojista, JSON.stringify(cfg)); auditar('agente_cfg', 'Configuracao do Agente IA atualizada', 'Cliente'); return { ok: true }; }
+export function lerAgente(lojista = 1) {
+  const r = db.prepare('SELECT json FROM agente_cfg WHERE lojista_id=?').get(lojista);
+  return r ? JSON.parse(r.json) : null;
+}
 
 const _insAud = db.prepare('INSERT INTO auditoria (acao,detalhe,quem) VALUES (?,?,?)');
 export const auditar = (acao, detalhe = null, quem = 'Gestor') => { try { _insAud.run(acao, detalhe, quem); } catch {} };
